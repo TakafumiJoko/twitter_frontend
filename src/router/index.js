@@ -1,6 +1,10 @@
+import { nextTick } from 'vue'
+import VueCookies from 'vue-cookies/vue-cookies'
 import { createRouter, createWebHistory } from 'vue-router'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import HomeView from '../views/HomeView.vue'
+
+const userId = $cookies.get("user_id")
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,22 +12,24 @@ const router = createRouter({
     {
       path: '/',
       name: 'beforeLogin',
-      component: BeforeLoginView
+      component: BeforeLoginView,
     },
     {
-      path: '/home',
+      path: '/home/:user_id',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      props: true,
+      meta: { requiresAuth: true },
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.requiresAuth && userId == null){
+    next({ name: "beforeLogin" })
+  } else {
+    next()
+  }
 })
 
 export default router

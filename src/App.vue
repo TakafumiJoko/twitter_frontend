@@ -1,18 +1,33 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router'
 import BeforeLoginView from './views/BeforeLoginView.vue'
 import HomeView from './views/HomeView.vue';
+
+export default {
+  name: "App",
+  data(){
+    return {
+      userId: 0,
+    }
+  },
+  mounted() {
+    const userId = $cookies.get("user_id")
+    if(userId != null){
+      this.userId += userId
+      console.log(this.userId)
+    }
+  },
+}
+
 </script>
 
 <template>
+
   <header>
     <div class="wrapper">
-      <!-- <HelloWorld msg="You did it!" /> -->
-
       <nav>
-        <RouterLink to="/">ログイン前</RouterLink>
-        <RouterLink to="/home">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink :to="{ path: '/' }">ログイン前</RouterLink>
+        <RouterLink :to="{ path: `/home/${userId}`, params: { user_id: this.userId }}">Home</RouterLink>
       </nav>
     </div>
   </header>
