@@ -9,7 +9,7 @@
     },
     data() {
       return {
-        formData: {
+        submitData: {
           nickname: "",
           phone_number: "",
           email: "",
@@ -18,13 +18,13 @@
       }
     },
     methods: {
-      createUser(formData, backend, frontend){
-        for(let property in formData) {
-          if(formData[property] == ""){
-            delete formData[property]
+      createUser(submitData, backend, frontend){
+        for(let property in submitData) {
+          if(submitData[property] == ""){
+            delete submitData[property]
           }
         }
-        const bodyParams = new URLSearchParams(formData)
+        const bodyParams = new URLSearchParams(submitData)
         axios({
           method: "post",
           url: `http://127.0.0.1:3000${backend}`,
@@ -46,9 +46,9 @@
 
 <template>
   <label for="name">ニックネーム</label>
-  <input type="text" v-model="formData.nickname" id="name">
-  <AuthForm :formData="formData" />
+  <input type="text" v-model="submitData.nickname" id="name">
+  <AuthForm :submitData="submitData" />
   <label for="birthday">生年月日</label>
-  <input type="text" v-model="formData.birthday" id="birthday">
-  <button @click="createUser(formData, '/signup', '/home')">アカウントを作成</button>
+  <input type="text" v-model="submitData.birthday" id="birthday">
+  <button @click="createUser(submitData, '/signup', '/home')">アカウントを作成</button>
 </template>

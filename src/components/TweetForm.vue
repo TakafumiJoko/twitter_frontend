@@ -1,15 +1,37 @@
 <script>
-  export default {
-    name: "TweetForm",
-    data() {
-      return {
-      
-      }
+export default {
+  name: "TweetForm",
+  data() {
+    return {
+      submitData: {
+        message: "",
+        user_id: this.user_id,
+      },
+    }
+  },
+  props: ["user_id"],
+  methods: {
+    createTweet(submitData, backend, frontend){
+      const bodyParams = new URLSearchParams(submitData)
+      axios({
+        method: "post",
+        url: `http://127.0.0.1:3000${backend}`,
+        data: bodyParams,
+      })
+      .then((res) => {
+        const tweet = res.data.tweet
+        console.log(`POST ${backend} ${tweet.user_id}`)
+        location.href = frontend + "/" + res.data.tweet.user_id
+      })
+      .catch(error => {
+        console.log(error)
+      })
     },
-    props: ["user_id"],
-  }
+  },
+}
 </script>
 
 <template>
-  {{ user_id  }}
+  <textarea v-model="submitData.message" cols="20" rows="7" placeholder="投稿してください"></textarea>
+  <button @click="createTweet(submitData, '/tweet', '/home')">ツイートする</button>
 </template>

@@ -14,6 +14,5 @@ export default {
 </script>
 
 <template>
-  {{ $route.params.user_id}}
-  {{ user_id  }}
+  <TweetForm :user_id="user_id" />
 </template>

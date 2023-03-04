@@ -9,24 +9,20 @@
     },
     data() {
       return {
-        cookieData: {
-          id: 0,
-        },
-        formData: {
+        submitData: {
+          id: 0, 
           phone_number: "",
           email: "",
         },
       }
     },
     methods: {
-      loginUser(formData, backend, frontend){
-        for(let property in formData) {
-          if(formData[property] == ""){
-            delete formData[property]
+      loginUser(submitData, backend, frontend){
+        for(let property in submitData) {
+          if(submitData[property] == ""){
+            delete submitData[property]
           }
         }
-        const submitData = Object.assign(this.cookieData, formData)
-        console.log(submitData)
         const bodyParams = new URLSearchParams(submitData)
         axios({
           method: "post",
@@ -48,6 +44,6 @@
 </script>
 
 <template>
-  <AuthForm :formData="formData" />
-  <button @click="loginUser(formData, '/login', '/home')">ログインする</button>
+  <AuthForm :submitData="submitData" />
+  <button @click="loginUser(submitData, '/login', '/home')">ログインする</button>
 </template>
