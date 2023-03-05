@@ -3,6 +3,7 @@ import VueCookies from 'vue-cookies/vue-cookies'
 import { createRouter, createWebHistory } from 'vue-router'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import HomeView from '../views/HomeView.vue'
+import UserView from '../views/UserView.vue'
 
 const userId = $cookies.get("user_id")
 
@@ -18,6 +19,13 @@ const router = createRouter({
       path: '/home/:user_id',
       name: 'home',
       component: HomeView,
+      props: true,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/users/:user_id',
+      name: 'user',
+      component: UserView,
       props: true,
       meta: { requiresAuth: true },
     },

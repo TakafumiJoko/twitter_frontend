@@ -14,7 +14,6 @@ export default {
     const userId = $cookies.get("user_id")
     if(userId != null){
       this.userId += userId
-      console.log(this.userId)
     }
   },
 }
@@ -26,8 +25,9 @@ export default {
   <header>
     <div class="wrapper">
       <nav>
-        <RouterLink :to="{ path: '/' }">ログイン前</RouterLink>
-        <RouterLink :to="{ path: `/home/${userId}`, params: { user_id: this.userId }}">Home</RouterLink>
+        <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
+        <RouterLink :to="{ name: 'home', params: { user_id: this.userId }}">Home</RouterLink>
+        <RouterLink :to="{ name: 'user', params: { user_id: this.userId }}">User</RouterLink>
       </nav>
     </div>
   </header>
