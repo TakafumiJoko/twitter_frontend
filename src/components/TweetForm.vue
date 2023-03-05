@@ -5,11 +5,9 @@ export default {
     return {
       submitData: {
         message: "",
-        user_id: this.user_id,
       },
     }
   },
-  props: ["user_id"],
   methods: {
     createTweet(submitData, backend, frontend){
       const bodyParams = new URLSearchParams(submitData)
@@ -33,5 +31,5 @@ export default {
 
 <template>
   <textarea v-model="submitData.message" cols="20" rows="7" placeholder="投稿してください"></textarea>
-  <button @click="createTweet(submitData, '/tweet', '/home')">ツイートする</button>
+  <button @click="createTweet(submitData, `/users/${user.id}/tweets`, '/home')">ツイートする</button>
 </template>

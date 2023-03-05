@@ -5,8 +5,6 @@ import BeforeLoginView from '../views/BeforeLoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
 
-const userId = $cookies.get("user_id")
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -16,24 +14,24 @@ const router = createRouter({
       component: BeforeLoginView,
     },
     {
-      path: '/home/:user_id',
+      path: '/home',
       name: 'home',
       component: HomeView,
-      props: true,
       meta: { requiresAuth: true },
     },
     {
-      path: '/users/:user_id',
+      path: '/user',
       name: 'user',
       component: UserView,
-      props: true,
       meta: { requiresAuth: true },
     },
   ]
 })
 
+const user_id = $cookies.get("user_id")
+
 router.beforeEach((to, from, next) => {
-  if(to.meta.requiresAuth && userId == null){
+  if(to.meta.requiresAuth && user_id == null){
     next({ name: "beforeLogin" })
   } else {
     next()

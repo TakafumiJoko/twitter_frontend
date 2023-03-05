@@ -1,4 +1,5 @@
 <script>
+import VueCookies from 'vue-cookies/vue-cookies';
 import { RouterLink, RouterView } from 'vue-router'
 import BeforeLoginView from './views/BeforeLoginView.vue'
 import HomeView from './views/HomeView.vue';
@@ -7,17 +8,14 @@ export default {
   name: "App",
   data(){
     return {
-      userId: 0,
     }
   },
   mounted() {
-    const userId = $cookies.get("user_id")
-    if(userId != null){
-      this.userId += userId
-    }
+  },
+  methods: {
+  
   },
 }
-
 </script>
 
 <template>
@@ -26,8 +24,8 @@ export default {
     <div class="wrapper">
       <nav>
         <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
-        <RouterLink :to="{ name: 'home', params: { user_id: this.userId }}">Home</RouterLink>
-        <RouterLink :to="{ name: 'user', params: { user_id: this.userId }}">User</RouterLink>
+        <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+        <RouterLink :to="{ name: 'user' }">User</RouterLink>
       </nav>
     </div>
   </header>

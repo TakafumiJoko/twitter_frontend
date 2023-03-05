@@ -50,5 +50,5 @@
   <AuthForm :submitData="submitData" />
   <label for="birthday">生年月日</label>
   <input type="text" v-model="submitData.birthday" id="birthday">
-  <button @click="createUser(submitData, '/signup', '/home')">アカウントを作成</button>
+  <button @click="createUser(submitData, '/users', '/home')">アカウントを作成</button>
 </template>

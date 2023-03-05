@@ -5,14 +5,9 @@ export default {
   components: {
     TweetForm,
   },
-  data(){
-    return {
-    }
-  },
-  props: ["user_id"],
 }
 </script>
 
 <template>
-  <TweetForm :user_id="user_id" />
+  <TweetForm />
 </template>
