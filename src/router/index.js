@@ -4,6 +4,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
+import SettingView from '../views/SettingView.vue'
+import SettingAccountView from '../views/SettingAccountView.vue'
+import SettingAccountDeactiveView from '../views/SettingAccountDeactiveView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +26,24 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: UserView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/setting',
+      name: 'setting',
+      component: SettingView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/setting/account',
+      name: 'settingAccount',
+      component: SettingAccountView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/setting/account/deactive',
+      name: 'settingAccountDeactive',
+      component: SettingAccountDeactiveView,
       meta: { requiresAuth: true },
     },
   ]

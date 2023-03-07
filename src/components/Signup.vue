@@ -14,7 +14,10 @@
           phone_number: "",
           email: "",
           birthday: "",
+          password: "",
         },
+        passwordConfirmation: "",
+        canCreateUser: true,
       }
     },
     methods: {
@@ -41,6 +44,13 @@
         })
       },
     },
+    watch: {
+      password(newPassword){
+        if(newPassword.length > 0 && newPassword == this.passwordConfirmation){
+          this.canCreateUser = false
+        }
+      }
+    }
   }
 </script>
 
@@ -50,5 +60,9 @@
   <AuthForm :submitData="submitData" />
   <label for="birthday">生年月日</label>
   <input type="text" v-model="submitData.birthday" id="birthday">
-  <button @click="createUser(submitData, '/users', '/home')">アカウントを作成</button>
+  <label for="password">パスワード</label>
+  <input type="password" v-model="submitData.password" id="password">
+  <label for="password_congirmation">パスワード確認</label>
+  <input type="password" v-model="passwordConfirmation" id="password_confirmation">
+  <button @click="createUser(submitData, '/users', '/home')" :disabled="canCreateUser">アカウントを作成</button>
 </template>

@@ -17,9 +17,6 @@ if(user_id != null){
 function getUser(backend){
   let user = null
   axios({
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
     method: "get",
     url: `http://127.0.0.1:3000${backend}`,
   })
@@ -34,5 +31,9 @@ function getUser(backend){
   })
   .catch(error => {
     console.log(error)
+    const app = createApp(App)
+    app.use(router)
+    app.use(VueCookies, { expires: '30d' })
+    app.mount('#app')
   })
 }

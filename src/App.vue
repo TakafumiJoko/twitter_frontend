@@ -1,8 +1,5 @@
 <script>
-import VueCookies from 'vue-cookies/vue-cookies';
 import { RouterLink, RouterView } from 'vue-router'
-import BeforeLoginView from './views/BeforeLoginView.vue'
-import HomeView from './views/HomeView.vue';
 
 export default {
   name: "App",
@@ -26,6 +23,7 @@ export default {
         <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
         <RouterLink :to="{ name: 'home' }">Home</RouterLink>
         <RouterLink :to="{ name: 'user' }">User</RouterLink>
+        <RouterLink :to="{ name: 'setting' }">Setting</RouterLink>
       </nav>
     </div>
   </header>

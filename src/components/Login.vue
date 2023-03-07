@@ -13,6 +13,7 @@
           id: 0, 
           phone_number: "",
           email: "",
+          password: "",
         },
       }
     },
@@ -45,5 +46,7 @@
 
 <template>
   <AuthForm :submitData="submitData" />
+  <label for="password">パスワード</label>
+  <input type="password" v-model="submitData.password" id="password">
   <button @click="loginUser(submitData, '/login', '/home')">ログインする</button>
 </template>
