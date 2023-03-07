@@ -15,16 +15,17 @@ if(user_id != null){
 }
 
 function getUser(backend){
-  let user = null
   axios({
     method: "get",
     url: `http://127.0.0.1:3000${backend}`,
   })
   .then((res) => {
-    user = res.data.user
+    const user = res.data.user
+    const tweets = res.data.tweets
     console.log(`GET ${backend} ${user}`)
     const app = createApp(App)
     app.config.globalProperties.user = user
+    app.config.globalProperties.tweets = tweets
     app.use(router)
     app.use(VueCookies, { expires: '30d' })
     app.mount('#app')

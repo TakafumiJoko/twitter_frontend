@@ -10,7 +10,6 @@
     data() {
       return {
         submitData: {
-          id: 0, 
           phone_number: "",
           email: "",
           password: "",
@@ -24,11 +23,10 @@
             delete submitData[property]
           }
         }
-        const bodyParams = new URLSearchParams(submitData)
         axios({
           method: "post",
           url: `http://127.0.0.1:3000${backend}`,
-          data: bodyParams,
+          data: submitData,
         })
         .then((res) => {
           const user = res.data.user
