@@ -3,15 +3,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
 export default {
   name: "App",
-  data(){
-    return {
-    }
-  },
-  mounted() {
-  },
-  methods: {
-  
-  },
 }
 </script>
 
@@ -22,7 +13,7 @@ export default {
       <nav>
         <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
         <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-        <RouterLink :to="{ name: 'user' }">User</RouterLink>
+        <RouterLink :to="{ name: 'user'}">User</RouterLink>
         <RouterLink :to="{ name: 'setting' }">Setting</RouterLink>
       </nav>
     </div>

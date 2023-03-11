@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios-cache-adapter": "^2.7.3",
     "vue": "^3.2.47",
     "vue-cookies": "^1.8.2",
     "vue-password-strength-meter": "^1.7.2",
