@@ -9,7 +9,7 @@
     },
     data() {
       return {
-        submitData: {
+        user: {
           nickname: "",
           phone_number: "",
           email: "",
@@ -21,16 +21,16 @@
       }
     },
     methods: {
-      createUser(submitData, backend, frontend){
-        for(let property in submitData) {
-          if(submitData[property] == ""){
-            delete submitData[property]
+      createUser(user, backend, frontend){
+        for(let property in this.user) {
+          if(this.user[property] == ""){
+            delete this.user[property]
           }
         }
         axios({
           method: "post",
           url: `http://127.0.0.1:3000${backend}`,
-          data: submitData,
+          data: this.user,
         })
         .then((res) => {
           const user = res.data.user
@@ -45,7 +45,7 @@
     },
     watch: {
       passwordConfirmation(newPasswordConfirmation){
-        if(this.submitData.password.length > 0 && this.submitData.password == newPasswordConfirmation){
+        if(this.user.password.length > 0 && this.user.password == newPasswordConfirmation){
           this.canCreateUser = false
         }
       }
@@ -55,13 +55,13 @@
 
 <template>
   <label for="name">ニックネーム</label>
-  <input type="text" v-model="submitData.nickname" id="name">
-  <AuthForm :submitData="submitData" />
+  <input type="text" v-model="user.nickname" id="name">
+  <AuthForm :user="user" />
   <label for="birthday">生年月日</label>
-  <input type="text" v-model="submitData.birthday" id="birthday">
+  <input type="text" v-model="user.birthday" id="birthday">
   <label for="password">パスワード</label>
-  <input type="password" v-model="submitData.password" id="password">
+  <input type="password" v-model="user.password" id="password">
   <label for="password_congirmation">パスワード確認</label>
   <input type="password" v-model="passwordConfirmation" id="password_confirmation">
-  <button @click="createUser(submitData, '/users', '/home')" :disabled="canCreateUser">アカウントを作成</button>
+  <button @click="createUser(user, '/users', '/home')" :disabled="canCreateUser">アカウントを作成</button>
 </template>

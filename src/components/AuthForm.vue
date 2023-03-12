@@ -7,7 +7,7 @@
         showEmail: false,
       }
     },
-    props: ["submitData"],
+    props: ["user"],
     methods: {
       toggleForm(formName) {
         switch(formName){
@@ -35,12 +35,12 @@
   </div>
   <div v-if="showPhoneNumber">
     <label for="phone_number">電話番号</label>
-    <input type="text" v-model="submitData.phone_number" id="phone_number">
+    <input type="text" v-model="user.phone_number" id="phone_number">
     <span @click="toggleForm('email')">代わりにメールアドレスを登録する</span>
   </div>
   <div v-if="showEmail">
     <label for="email">メールアドレス</label>
-    <input type="text" v-model="submitData.email" id="email">
+    <input type="text" v-model="user.email" id="email">
     <span @click="toggleForm('phoneNumber')">代わりに電話番号を登録する</span>
   </div>
 </template>
