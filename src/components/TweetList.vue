@@ -10,13 +10,7 @@ export default {
       tweets: null,
     }
   },
-  props: ["newTweet"],
-  mounted() {
-    const user_id = $cookies.get("user_id")
-    if(user_id != null){
-      this.getTweets(`/users/${user_id}/tweets`)
-    }
-  },
+  props: ["newTweet", "user"],
   methods: {
     getTweets(backend){
       axios({
@@ -40,16 +34,22 @@ export default {
       })
     }
   },
+  computed: {
+
+  },
   watch: {
     newTweet(newNewTweet, oldNweTweet) {
       this.tweets.push(newNewTweet)
-    }
+    },
+    user(newUser, oldUser) {
+      this.getTweets(`/users/${newUser.id}/tweets`)
+    },
   },
 }
 </script>
 
 <template>
   <div v-for="tweet in tweets" :key="tweet.id">
-    <Tweet :tweet="tweet" @tweet-updated="tweetUpdated" @tweet-destroyed="(tweet) => { this.tweets = this.tweets.filter((t) => t.id != tweet.id) }" />
+    <Tweet :tweet="tweet" @tweet-updated="tweetUpdated" @tweet-destroyed="(tweet) => { this.tweets = this.tweets.filter((t) => t?.id != tweet?.id) }" />
   </div>
 </template>

@@ -5,7 +5,7 @@ export default {
     return {
     }
   },
-  props: ["tweet"],
+  props: ["tweet", "user"],
   emits: ["tweetUpdated", "tweetDestroyed"],
   mounted() {
   },
@@ -40,8 +40,8 @@ export default {
 </script>
 
 <template>
-  <textarea v-model="tweet.message" cols="20" rows="7"></textarea>
-  <button @click="updateTweet(tweet, `/users/${$user.id}/tweets/${tweet.id}`)">更新</button>
+  <textarea cols="20" rows="7"></textarea>
+  <button @click="updateTweet(tweet, `/users/${user?.id}/tweets/${tweet?.id}`)">更新</button>
   <!-- <span @click="showEditTweetModal">・・・</span> -->
-  <button @click="destroyTweet(tweet, `/users/${$user.id}/tweets/${tweet.id}`)">削除</button>
+  <button @click="destroyTweet(tweet, `/users/${user?.id}/tweets/${tweet?.id}`)">削除</button>
 </template>

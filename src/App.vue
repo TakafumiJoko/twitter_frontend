@@ -3,6 +3,11 @@ import { RouterLink, RouterView } from 'vue-router'
 
 export default {
   name: "App",
+  data() {
+    return {
+      user_id: $cookies.get("user_id")
+    }
+  }
 }
 </script>
 
@@ -13,7 +18,7 @@ export default {
       <nav>
         <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
         <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-        <RouterLink :to="{ name: 'user'}">User</RouterLink>
+        <RouterLink :to="{ name: 'user', params: { id: user_id } }">User</RouterLink>
         <RouterLink :to="{ name: 'setting' }">Setting</RouterLink>
       </nav>
     </div>
