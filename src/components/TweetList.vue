@@ -8,9 +8,10 @@ export default {
   data() {
     return {
       tweets: null,
+      mode: null,
     }
   },
-  props: ["newTweet", "user"],
+  props: ["newTweet", "user", "searchedTweets"],
   methods: {
     getTweets(backend){
       axios({
@@ -34,9 +35,6 @@ export default {
       })
     }
   },
-  computed: {
-
-  },
   watch: {
     newTweet(newNewTweet, oldNweTweet) {
       this.tweets.push(newNewTweet)
@@ -44,12 +42,25 @@ export default {
     user(newUser, oldUser) {
       this.getTweets(`/users/${newUser.id}/tweets`)
     },
+    searchedTweets(newSearched) {
+      this.mode = "Searched"
+    },
+  },
+  created(){
+    if(this.$route.name === "home" || this.$route.name === "user") {
+      this.mode = "Personal"
+    } else if (this.$route.name === "search") {
+      this.mode = "BeforeSearch"
+    }
   },
 }
 </script>
 
 <template>
-  <div v-for="tweet in tweets" :key="tweet.id">
-    <Tweet :tweet="tweet" @tweet-updated="tweetUpdated" @tweet-destroyed="(tweet) => { this.tweets = this.tweets.filter((t) => t?.id != tweet?.id) }" />
+  <div v-if="mode === 'Personal'">
+    <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" :mode="mode" @tweet-updated="tweetUpdated" @tweet-destroyed="(tweet) => { this.tweets = this.tweets.filter((t) => t?.id != tweet?.id) }" />
+  </div>
+  <div v-if="mode === 'Searched'">
+    <Tweet v-for="tweet in searchedTweets" :key="tweet.id" :tweet="tweet" :mode="mode" />
   </div>
 </template>

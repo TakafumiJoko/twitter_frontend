@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
+import SearchView from '../views/SearchView.vue'
 import SettingView from '../views/SettingView.vue'
 import SettingAccountView from '../views/SettingAccountView.vue'
 import SettingAccountDeactiveView from '../views/SettingAccountDeactiveView.vue'
@@ -26,6 +27,12 @@ const router = createRouter({
       path: '/users/:id',
       name: 'user',
       component: UserView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView,
       meta: { requiresAuth: true },
     },
     {

@@ -3,12 +3,11 @@ export default {
   name: "Tweet",
   data() {
     return {
+      message: this.tweet.message,
     }
   },
-  props: ["tweet", "user"],
+  props: ["tweet", "user", "mode"],
   emits: ["tweetUpdated", "tweetDestroyed"],
-  mounted() {
-  },
   methods: {
     updateTweet(tweet, backend){
       axios({
@@ -40,8 +39,13 @@ export default {
 </script>
 
 <template>
-  <textarea cols="20" rows="7"></textarea>
-  <button @click="updateTweet(tweet, `/users/${user?.id}/tweets/${tweet?.id}`)">更新</button>
-  <!-- <span @click="showEditTweetModal">・・・</span> -->
-  <button @click="destroyTweet(tweet, `/users/${user?.id}/tweets/${tweet?.id}`)">削除</button>
+  <div v-if="mode === 'Personal'">
+    <textarea v-model="message" cols="20" rows="7"></textarea>
+    <button @click="updateTweet(tweet, `/users/${user?.id}/tweets/${tweet?.id}`)">更新</button>
+    <!-- <span @click="showEditTweetModal">・・・</span> -->
+    <button @click="destroyTweet(tweet, `/users/${user?.id}/tweets/${tweet?.id}`)">削除</button>
+  </div>
+  <div v-if="mode === 'Searched'">
+    {{ tweet.message }}
+  </div>
 </template>

@@ -7,7 +7,7 @@ export default {
     return {
       user_id: $cookies.get("user_id")
     }
-  }
+  },
 }
 </script>
 

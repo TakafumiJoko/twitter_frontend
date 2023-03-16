@@ -3,11 +3,6 @@
     name: "ProfileForm",
     data() {
       return {
-        nickname: null,
-        introduction: null,
-        residence: null,
-        website: null,
-        birthday: null,
       }
     },
     props: ["user"],
@@ -27,28 +22,19 @@
         })
       },
     },
-    watch: {
-      user(newUser, oldUser){
-        this.nickname = newUser.nickname
-        this.introduction = newUser.introduction
-        this.residence = newUser.residence
-        this.website = newUser.website
-        this.birthday = newUser.birthday
-      }
-    }
   }
 </script>
 
 <template>
   <label for="nickname">名前</label>
-  <input v-model="nickname" type="text" id="nickname">
+  <input v-model="user.nickname" type="text" id="nickname">
   <label for="introduction">自己紹介</label>
-  <textarea v-model="introduction" id="introduction" cols="20" rows="8"></textarea>
+  <textarea v-model="user.introduction" id="introduction" cols="20" rows="8"></textarea>
   <label for="residence">場所</label>
-  <input v-model="residence" type="text" id="residence">
+  <input v-model="user.residence" type="text" id="residence">
   <label for="website">ウェブサイト</label>
-  <input v-model="website" type="text" id="website">
+  <input v-model="user.website" type="text" id="website">
   <label for="birthday">生年月日</label>
-  <input v-model="birthday" type="text" id="birthday">
+  <input v-model="user.birthday" type="text" id="birthday">
   <button @click="updateUser(`/users/${user?.id}`)">保存</button> 
 </template>

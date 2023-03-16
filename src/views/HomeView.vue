@@ -41,7 +41,7 @@ export default {
 </script>
 
 <template>
-  <TweetForm @tweet-created="(param) => { this.newTweet = param }" />
+  <TweetForm :user="user" @tweet-created="(tweet) => { newTweet = tweet }" />
   <TweetList :new-tweet="newTweet" :user="user" />  
   <SearchForm></SearchForm>
 </template>
