@@ -8,10 +8,16 @@ import SearchView from '../views/SearchView.vue'
 import SettingView from '../views/SettingView.vue'
 import SettingAccountView from '../views/SettingAccountView.vue'
 import SettingAccountDeactiveView from '../views/SettingAccountDeactiveView.vue'
+import TestView from '../views/TestView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/test',
+      name: 'test',
+      component: TestView,
+    },
     {
       path: '/',
       name: 'beforeLogin',

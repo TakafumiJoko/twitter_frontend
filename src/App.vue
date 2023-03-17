@@ -16,8 +16,10 @@ export default {
   <header>
     <div class="wrapper">
       <nav>
+        <RouterLink :to="{ name: 'test' }">テスト用</RouterLink>
         <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
         <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+        <RouterLink :to="{ name: 'search' }">Search</RouterLink>
         <RouterLink :to="{ name: 'user', params: { id: user_id } }">User</RouterLink>
         <RouterLink :to="{ name: 'setting' }">Setting</RouterLink>
       </nav>
