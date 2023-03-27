@@ -6,11 +6,14 @@ export default {
     return {
     }
   },
-  mounted() {
+  computed: {
+    searchResultTweets(){
+      return this.$store.getters.searchResultTweets
+    }
   },
-  methods: {
-  
-  },
+  created(){
+    console.log(this.searchResultTweets)
+  }
 }
 </script>
 

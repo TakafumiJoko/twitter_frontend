@@ -1,22 +1,21 @@
 <script>
-import TweetList from '../components/TweetList.vue';
-import SearchForm from '../components/SearchForm.vue';
+import SearchForm from '../components/SearchForm.vue'
+import CategoryTabs from "../components/CategoryTabs.vue"
 
 export default {
-  name: "Search",
+  name: "SearchView",
   data() {
     return {
-      searchedTweets: null,
     }
   },
   components: {
-    TweetList,
     SearchForm,
+    CategoryTabs
   },
 }
 </script>
 
 <template>
-  <SearchForm @tweet-searched="(results)=>searchedTweets=results"></SearchForm>
-  <TweetList :searched-tweets="searchedTweets"></TweetList>
+  <SearchForm></SearchForm>
+  <CategoryTabs></CategoryTabs>
 </template>

@@ -64,7 +64,7 @@
     "@vue/compiler-dom" "3.2.47"
     "@vue/shared" "3.2.47"
 
-"@vue/devtools-api@^6.4.5":
+"@vue/devtools-api@^6.0.0-beta.11", "@vue/devtools-api@^6.4.5", "@vue/devtools-api@^6.5.0":
   version "6.5.0"
   resolved "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.5.0.tgz"
   integrity sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==
@@ -279,6 +279,13 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+vee-validate@^4.8.4:
+  version "4.8.4"
+  resolved "https://registry.npmjs.org/vee-validate/-/vee-validate-4.8.4.tgz"
+  integrity sha512-wlLBy50t4EMEin5oqxS2mxpqW02TkIsk0H3LcivLztNJKKLW17hpPSQtQnn8wjDLoWWZ/CVOfep6aw77aCAavg==
+  dependencies:
+    "@vue/devtools-api" "^6.5.0"
+
 vite@^4.0.0, vite@^4.1.4:
   version "4.1.4"
   resolved "https://registry.npmjs.org/vite/-/vite-4.1.4.tgz"
@@ -303,7 +310,7 @@ vue-router@^4.1.6:
   dependencies:
     "@vue/devtools-api" "^6.4.5"
 
-vue@^3.2.0, vue@^3.2.25, vue@^3.2.47, vue@3.2.47:
+vue@^3.0.0, vue@^3.0.2, vue@^3.2.0, vue@^3.2.25, vue@^3.2.47, vue@3.2.47:
   version "3.2.47"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.47.tgz"
   integrity sha512-60188y/9Dc9WVrAZeUVSDxRQOZ+z+y5nO2ts9jWXSTkMvayiWxCWOWtBQoYjLeccfXkiiPZWAHcV+WTPhkqJHQ==
@@ -313,3 +320,15 @@ vue@^3.2.0, vue@^3.2.25, vue@^3.2.47, vue@3.2.47:
     "@vue/runtime-dom" "3.2.47"
     "@vue/server-renderer" "3.2.47"
     "@vue/shared" "3.2.47"
+
+vuex-extensions@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/vuex-extensions/-/vuex-extensions-4.0.0.tgz"
+  integrity sha512-cO1erkAa8QmvnpJ8vlCT3aPrP/Wje0vWOI/JFGlBiMuzGQeY3uD4pMmQo6YhtX6akIlcBS4gvpXaIe0Vedhi5g==
+
+vuex@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/vuex/-/vuex-4.0.2.tgz"
+  integrity sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q==
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.11"

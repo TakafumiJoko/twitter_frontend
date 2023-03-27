@@ -3,6 +3,7 @@ import Profile from "../components/Profile.vue"
 import ProfileForm from "../components/ProfileForm.vue"
 import SearchForm from "../components/SearchForm.vue"
 import TweetList from "../components/TweetList.vue"
+import { cookieUserId } from "../modules/session"
 
 export default {
   name: "UserView",
@@ -14,38 +15,29 @@ export default {
   },
   data() {
     return {
-      user: null,
-      user_id: null,
-      newTweet: null,
     }
   },
-  methods: {
-    getUser(backend){
-      axios({
-        method: "get",
-        url: `http://127.0.0.1:3000${backend}`,
-      })
-      .then((res) => {
-        this.user = res.data.user
-        console.log(`GET ${backend} ${this.user.nickname}`)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+  computed: {
+    currentUser(){
+      return this.$store.getters.currentUser
     },
+    userId(){
+      return this.$store.getters.userId
+    },        
   },
-  created() {
-    this.user_id = $cookies.get("user_id")
-    if(this.user_id != null){
-      this.getUser(`/users/${this.user_id}`)
-    } 
+  methods: {
+ 
+  },
+  created(){
+    this.$store.commit('setUserId', { userId: this.$route.params.id })
+    this.$store.dispatch('getUser').then(this.$store.dispatch('getTweets', { mode: { user: 'user', tweets: 'user' } }))
   },
 }
 </script>
 
 <template>
-  <Profile :user="user" />
-  <TweetList :new-tweet="newTweet" :user="user" />  
-  <ProfileForm v-if="user?.id==user_id" :user="user" />
+  <Profile/>
+  <TweetList/>  
+  <ProfileForm v-if="userId==currentUser.id"/>
   <SearchForm></SearchForm>
 </template>

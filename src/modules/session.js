@@ -1,7 +1,14 @@
-export function login(user_id) {
-  $cookies.set("user_id", user_id)
+const login = function login(user) {
+  $cookies.set("userId", user.id)
 }
 
-export function logout(user_id) {
-  $cookies.remove("user_id")
+const logout = function logout() {
+  $cookies.remove("userId")
+  this.$store.reset()
 }
+
+const cookieUserId = function cookieUserId(){
+  return $cookies.get("userId")
+}
+
+export { login, logout, cookieUserId }

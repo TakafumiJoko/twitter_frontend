@@ -1,44 +1,38 @@
 <script>
   export default {
     name: "SearchForm",
-    data() {
-      return {
-        key: null,
-        result: {
-          users: null,
-          tweets: null,
-        }, 
-      }
+    computed: {
+      users(){
+        return this.$store.getters.users
+      },
+      searchResultTweets(){
+        return this.$store.getters.searchResultTweets
+      },
+      key(){
+        return this.$store.getters.key
+      },
     },
-    emits: ["tweetSearched", "test"],
     methods: {
       getData() {
-        axios({
-          method: "get",
-          url: `http://127.0.0.1:3000/${this.key}`
-        }).then((res)=>{
-          this.result.users = res.data.users
-          this.result.tweets = res.data.tweets
-        }).catch((err)=>{
-          console.error(err)
-        })
+        this.$store.dispatch('getData', { mode: { tweets: 'searchResult' } })
       },
-      searchTweet(result){
-        this.$router.push({ name: 'search'})
-        this.$emit("tweetSearched", result)
+      getUserTweets(user){
+        this.$store.dispatch('getTweets', { user: user, mode: 'user' })
+      },
+      getSearchResultTweets(){
+        this.$store.dispatch('getTweets', { mode: { tweets: 'searchResult' } })
       },
     },
   }
 </script>
 
 <template>
-  <button @click="$emit('test', { id: 1, message: 'テスト'})"></button>
-  <input type="text" v-model="key">
+  <input type="text" @change="$store.commit('setKey', { key: $event.target.value })">
   <button @click="getData">検索</button>
-  <div v-for="user in result.users">
-    <div @click="$router.push({ name: 'user', params: { id: user.id }})">{{ user.nickname }}</div>
+  <div v-for="user in users">
+    <div @click="getUserTweets(user)">{{ user.nickname }}</div>
   </div>
-  <div v-if="result.tweets">
-    <div @click="searchTweet(result.tweets)">{{ key + " " + result.tweets.length }}</div>
+  <div v-if="searchResultTweets">
+    <div @click="getSearchResultTweets">{{ key + " " + searchResultTweets.length }}</div>
   </div>
 </template>

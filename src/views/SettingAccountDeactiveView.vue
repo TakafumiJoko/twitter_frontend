@@ -4,47 +4,46 @@ export default {
   name: "SettingAccountDeactiveView",
   data(){
     return {
-      step: "introduction",
-      password: null,
-      canDestroyUser: true,
     }
+  },
+  computed: {
+    currentUser(){
+      return this.$store.getters.currentUser
+    },
+    pageMode(){
+      return this.$store.getters.pageMode
+    },
+    passwordConfirmation(){
+      return this.$store.getters.passwordConfirmation
+    },
+    destroyUserDisabled(){
+      return this.$store.getters.destroyUserDisabled
+    },
   },
   mounted() {
   },
   methods: {
-    goToConfirmation() {
-      this.step = "confirmation"
+    setPageMode(page){
+      this.$store.commit('setPageMode', { mode: { page: page } })
     },
-    destroyUser(backend, frontend){
-      axios({
-        method: "delete",
-        url: `http://127.0.0.1:3000${backend}`,
-      })
-      .then(() => {
-        logout(this.$user.id)
-        location.href = frontend
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    destroyUser(){
+      this.$store.dispatch('destroyUser')
+      logout()
+    },
+    judgePassword(password){
+      this.$store.dispatch('judgePassword', { value: password })
     },
   },
-  watch: {
-    password(newPassword) {
-      if(newPassword.length > 0 && newPassword == this.$user.password){
-        this.canDestroyUser = false
-      }
-    }
-  }
 }
 </script>
 
 <template>
-  <p v-if="step == 'introduction'" @click="goToConfirmation">アカウント削除</p>
-  <div v-if="step == 'confirmation'">
-    <label for="password">パスワード</label>
-    <input type="password" v-model="password" id="password">
-    <button @click="destroyUser(`/users/${$user.id}`, '/')" :disabled="canDestroyUser">アカウント削除</button>
+  <p v-if="pageMode == 'introduction'" @click="setPageMode('confirmation')">アカウント削除</p>
+  <div v-if="pageMode == 'confirmation'">
+    <label for="password_confirmation">パスワード確認</label>
+    <input type="password" id="password_confirmation" :value="passwordConfirmation" @input="judgePassword($event.target.value)" >
+    <button @click="destroyUser" :disabled="destroyUserDisabled">アカウント削除</button>
+    <button @click="setPageMode('introduction')">戻る</button>
   </div>
 </template>
 

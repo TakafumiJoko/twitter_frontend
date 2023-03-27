@@ -1,18 +1,26 @@
 <script>
-import Signup from "../components/Signup.vue"
-import Login from "../components/Login.vue"
+import Modal from '../components/Modal.vue';
 
 export default {
   name: "BeforeLoginView",
+  data(){
+    return {
+    }
+  },
   components: {
-    Signup,
-    Login,
+    Modal,
   },
 }
 </script>
 
 <template>
-  <Signup />
-  <br>
-  <Login />
+  <router-link :to="{ name: 'signup' }">サインアップする</router-link>
+  <router-link :to="{ name: 'login' }">ログインする</router-link>
+  <Modal v-if="/\/(signup|login)/.test($route.path)">
+    <slot id="main">
+      <router-view></router-view>
+    </slot>
+  </Modal>
 </template>
+
+

@@ -1,27 +1,37 @@
 import { nextTick } from 'vue'
 import VueCookies from 'vue-cookies/vue-cookies'
 import { createRouter, createWebHistory } from 'vue-router'
-import BeforeLoginView from '../views/BeforeLoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
 import SearchView from '../views/SearchView.vue'
+import SearchResultView from '../views/SearchResultView.vue'
 import SettingView from '../views/SettingView.vue'
 import SettingAccountView from '../views/SettingAccountView.vue'
 import SettingAccountDeactiveView from '../views/SettingAccountDeactiveView.vue'
-import TestView from '../views/TestView.vue'
+import { cookieUserId } from '../modules/session'
+import BeforeLoginView from '../views/BeforeLoginView.vue'
+import SignupModalView from '../views/SignupView.vue'
+import LoginModalView from '../views/LoginView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/test',
-      name: 'test',
-      component: TestView,
-    },
-    {
       path: '/',
       name: 'beforeLogin',
       component: BeforeLoginView,
+      children: [
+        {
+          path: 'signup',
+          name: 'signup',
+          component: SignupModalView,
+        },
+        {
+          path: 'login',
+          name: 'login',
+          component: LoginModalView,
+        }
+      ]
     },
     {
       path: '/home',
@@ -39,6 +49,12 @@ const router = createRouter({
       path: '/search',
       name: 'search',
       component: SearchView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/search_result/:key',
+      name: 'searchResult',
+      component: SearchResultView,
       meta: { requiresAuth: true },
     },
     {
@@ -62,14 +78,13 @@ const router = createRouter({
   ]
 })
 
-const user_id = $cookies.get("user_id")
-
-router.beforeEach((to, from, next) => {
-  if(to.meta.requiresAuth && user_id == null){
-    next({ name: "beforeLogin" })
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if(to.meta.requiresAuth && cookieUserId() == null){
+//     next({ name: "beforeLogin" })
+//   } else {
+//     next()
+//   }
+// })
 
 export default router
+
