@@ -7,15 +7,20 @@
     },
     data() {
       return {
-        nickname: '',
-        birthday: '',
-        password: '',
-        passwordConfirmation: '',
+        user: {
+          nickname: '',
+          birthday: '',
+          phoneNumber: '',
+          email: '',
+          password: '',
+          passwordConfirmation: '',
+        },
+        contact: 'phoneNumber',
       }
     },
     computed: {
       createUserDisabled(){
-        return !(this.password?.trim() && this.password === this.passwordConfirmation)
+        return !(this.user.password?.trim() && this.user.password === this.user.passwordConfirmation)
       },
       server(){
         return this.$store.getters.server
@@ -26,7 +31,9 @@
     },
     methods: {
       createUser(){
-        axios.post(this.server + this.api.users.create)
+        axios.post(
+          this.server + this.api.users.create, this.user
+        )
         .then((res) => {
           console.log(`POST ${this.api.users.create} ${res.data.nickname}`)
           this.$router.push({ name: 'home' })
@@ -47,17 +54,25 @@
   <VForm @submit.prevent="createUser">
     <VTextField 
       label="名前" 
-      v-model="nickname"
+      v-model="user.nickname"
       >
     </VTextField>
+    <div v-if="contact == 'phoneNumber'">
+      <VTextField label="電話番号" v-model="user.phoneNumber" />
+      <span @click="contact='email'">代わりにメールアドレスを登録する</span>
+    </div>
+    <div v-if="contact == 'email'">
+      <VTextField label="メールアドレス" v-model="user.email" />
+      <span @click="contact='phoneNumber'">代わりに電話番号を登録する</span>
+    </div>
     <VTextField
       label="パスワード"
-      v-model="password"
+      v-model="user.password"
       type="password">
     </VTextField>
     <VTextField
       label="パスワード確認"
-      v-model="passwordConfirmation"
+      v-model="user.passwordConfirmation"
       type="password">
     </VTextField>
     <VBtn @click="createUser" :disabled="createUserDisabled">

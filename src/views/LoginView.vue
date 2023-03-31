@@ -1,13 +1,17 @@
 <script>
-  import ContactInput from "../components/ContactInput.vue"
   import { login } from "../modules/session.js"
 
   export default {
     name: "LoginView",
     data() {
       return {
-        password: '',
-        passwordConfirmation: '',
+        user: {
+          phoneNumber: '',
+          email: '',
+          password: '',
+          passwordConfirmation: '',
+        },
+        contact: 'phoneNumber',
       }
     },
     computed: {
@@ -20,7 +24,7 @@
     },
     methods: {
       loginUser(){
-        axios.post(this.server + this.api.users.login)
+        axios.post(this.server + this.api.users.login, this.user)
         .then((res) => {
           console.log(`POST ${context.getters.api.users.login} ${res.data.user.nickname}`)
         })
@@ -37,14 +41,22 @@
 
 <template>
   <VForm @submit.prevent="loginUser">
+    <div v-if="contact == 'phoneNumber'">
+      <VTextField label="電話番号" v-model="user.phoneNumber" />
+      <span @click="contact='email'">代わりにメールアドレスを登録する</span>
+    </div>
+    <div v-if="contact == 'email'">
+      <VTextField label="メールアドレス" v-model="user.email" />
+      <span @click="contact='phoneNumber'">代わりに電話番号を登録する</span>
+    </div>
     <VTextField
       label="パスワード"
-      v-model="password"
+      v-model="user.password"
       type="password">
     </VTextField>
     <VTextField
       label="パスワード確認"
-      v-model="passwordConfirmation"
+      v-model="user.passwordConfirmation"
       type="password">
     </VTextField>
     <VBtn @click="loginUser">
