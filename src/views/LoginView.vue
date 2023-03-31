@@ -3,13 +3,11 @@
   import { login } from "../modules/session.js"
 
   export default {
-    name: "LoginModalView",
-    components: {
-      ContactInput,
-    },
+    name: "LoginView",
     data() {
       return {
-        user: {},
+        password: '',
+        passwordConfirmation: '',
       }
     },
     computed: {
@@ -22,7 +20,7 @@
     },
     methods: {
       loginUser(){
-        axios.post(this.server + this.api.users.login, this.user)
+        axios.post(this.server + this.api.users.login)
         .then((res) => {
           console.log(`POST ${context.getters.api.users.login} ${res.data.user.nickname}`)
         })
@@ -38,8 +36,19 @@
 </script>
 
 <template>
-  <ContactInput :user="user"></ContactInput>
-  <label for="password">パスワード</label>
-  <input type="password" v-model="user.password" id="password">
-  <button @click="loginUser">ログインする</button> 
+  <VForm @submit.prevent="loginUser">
+    <VTextField
+      label="パスワード"
+      v-model="password"
+      type="password">
+    </VTextField>
+    <VTextField
+      label="パスワード確認"
+      v-model="passwordConfirmation"
+      type="password">
+    </VTextField>
+    <VBtn @click="loginUser">
+      次へ
+    </VBtn>
+  </VForm>
 </template>

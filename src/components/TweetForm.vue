@@ -1,8 +1,10 @@
 <script>
 export default {
   name: "TweetForm",
+ 
   data() {
     return {
+      message: '',
     }
   },
   computed: {
@@ -12,6 +14,7 @@ export default {
   },
   methods: {
     createTweet(){
+      console.log(this.message)
       this.$store.dispatch('createTweet')
     }
   },
@@ -20,7 +23,11 @@ export default {
 
 <template>
   <div>
-    <textarea :value="tweet.message" @change="$store.commit('setTweet', { message: $event.target.value })" cols="20" rows="7" placeholder="投稿してください"></textarea>
-    <button @click="createTweet">ツイートする</button>
+    <VForm>
+      <VTextarea
+        v-model="message"
+      ></VTextarea>
+      <VBtn @click="createTweet">ツイートする</VBtn>
+    </VForm>
   </div>
 </template>

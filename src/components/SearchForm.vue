@@ -27,8 +27,12 @@
 </script>
 
 <template>
-  <input type="text" @change="$store.commit('setKey', { key: $event.target.value })">
-  <button @click="getData">検索</button>
+  <VForm @submit.prevent="getData">
+    <VTextField
+      @change="$store.commit('setKey', { key: $event.target.value })"
+    ></VTextField>
+    <VBtn @click="getData">検索</VBtn>
+  </VForm>
   <div v-for="user in users">
     <div @click="getUserTweets(user)">{{ user.nickname }}</div>
   </div>

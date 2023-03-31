@@ -40,10 +40,17 @@ export default {
 <template>
   <p v-if="pageMode == 'introduction'" @click="setPageMode('confirmation')">アカウント削除</p>
   <div v-if="pageMode == 'confirmation'">
-    <label for="password_confirmation">パスワード確認</label>
-    <input type="password" id="password_confirmation" :value="passwordConfirmation" @input="judgePassword($event.target.value)" >
-    <button @click="destroyUser" :disabled="destroyUserDisabled">アカウント削除</button>
-    <button @click="setPageMode('introduction')">戻る</button>
+    <VForm>
+      <VTextField 
+        label="パスワード確認" 
+        :value="passwordConfirmation" @input="judgePassword($event.target.value)"
+      ></VTextField>
+      <VBtn
+        @click="destroyUser" 
+        :disabled="destroyUserDisabled"
+      >アカウント削除</VBtn>
+      <VBtn @click="setPageMode('introduction')">戻る</VBtn>
+    </VForm> 
   </div>
 </template>
 

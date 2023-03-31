@@ -1,21 +1,21 @@
 <script>
-  import ContactInput from "../components/ContactInput.vue"
   import { login } from "../modules/session.js"
 
   export default {
-    name: "SignupModalView",
+    name: "SignupView",
     components: {
-      ContactInput,
     },
     data() {
       return {
-        user: {},
+        nickname: '',
+        birthday: '',
+        password: '',
         passwordConfirmation: '',
       }
     },
     computed: {
       createUserDisabled(){
-        return !(this.user.password?.trim() && this.user.password === this.passwordConfirmation)
+        return !(this.password?.trim() && this.password === this.passwordConfirmation)
       },
       server(){
         return this.$store.getters.server
@@ -26,9 +26,9 @@
     },
     methods: {
       createUser(){
-        axios.post(this.server + this.api.users.create, this.user)
+        axios.post(this.server + this.api.users.create)
         .then((res) => {
-          console.log(`POST ${this.api.users.create} ${res.data.user.nickname}`)
+          console.log(`POST ${this.api.users.create} ${res.data.nickname}`)
           this.$router.push({ name: 'home' })
           login(res.data.user)
         })
@@ -44,14 +44,24 @@
 </script>
 
 <template>
-  <label for="name">ニックネーム</label>
-  <input type="text" v-model="user.nickname" id="name">
-  <ContactInput :user="user"></ContactInput>
-  <label for="birthday">生年月日</label>
-  <input type="text" v-model="user.birthday" id="birthday">
-  <label for="password">パスワード</label>
-  <input type="password" v-model="user.password" id="password">
-  <label for="password_congirmation">パスワード確認</label>
-  <input type="password" v-model="passwordConfirmation" id="password_confirmation">
-  <button @click="createUser" :disabled="createUserDisabled">アカウントを作成</button>
+  <VForm @submit.prevent="createUser">
+    <VTextField 
+      label="名前" 
+      v-model="nickname"
+      >
+    </VTextField>
+    <VTextField
+      label="パスワード"
+      v-model="password"
+      type="password">
+    </VTextField>
+    <VTextField
+      label="パスワード確認"
+      v-model="passwordConfirmation"
+      type="password">
+    </VTextField>
+    <VBtn @click="createUser" :disabled="createUserDisabled">
+      次へ
+    </VBtn>
+  </VForm>
 </template>
