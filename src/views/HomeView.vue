@@ -18,12 +18,13 @@ export default {
   },
   created(){
     this.$store.dispatch('getTweets', { mode: { user: 'currentUser', tweets: 'currentUser' } })
+    this.$store.dispatch('getFollowings')
   },
 }
 </script>
 
 <template>
   <TweetForm/>
-  <TweetList/>  
+  <TweetList />  
   <SearchForm></SearchForm>
 </template>

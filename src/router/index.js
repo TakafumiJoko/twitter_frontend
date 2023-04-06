@@ -12,6 +12,7 @@ import { cookieUserId } from '../modules/session'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import SignupModalView from '../views/SignupView.vue'
 import LoginModalView from '../views/LoginView.vue'
+import TweetDetail from '../components/TweetDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +65,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/users/:user_id/tweets/:id',
+      name: 'tweetDetail',
+      component: TweetDetail,
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/setting/account',
       name: 'settingAccount',
       component: SettingAccountView,
@@ -78,13 +85,13 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   if(to.meta.requiresAuth && cookieUserId() == null){
-//     next({ name: "beforeLogin" })
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if(to.meta.requiresAuth && cookieUserId() == null){
+    next({ name: "beforeLogin" })
+  } else {
+    next()
+  }
+})
 
 export default router
 

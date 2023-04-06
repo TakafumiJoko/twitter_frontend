@@ -1,5 +1,6 @@
 <script>
   import { login } from "../modules/session.js"
+  import { nicknameRules, isUnique } from "../modules/validation"
 
   export default {
     name: "SignupView",
@@ -28,6 +29,9 @@
       api(){
         return this.$store.getters.api
       },
+      nicknameRules(){
+        return nicknameRules
+      },
     },
     methods: {
       createUser(){
@@ -47,6 +51,9 @@
     created(){
       this.$store.reset()
     },
+    mounted(){
+      isUnique()
+    }
   }
 </script>
 
@@ -55,10 +62,11 @@
     <VTextField 
       label="名前" 
       v-model="user.nickname"
+      :rules="nicknameRules"
       >
     </VTextField>
     <div v-if="contact == 'phoneNumber'">
-      <VTextField label="電話番号" v-model="user.phoneNumber" />
+      <VTextField label="電話番号" v-model="user.phoneNumber"/>
       <span @click="contact='email'">代わりにメールアドレスを登録する</span>
     </div>
     <div v-if="contact == 'email'">

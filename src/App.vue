@@ -16,6 +16,7 @@ export default {
     },
   },
   mounted(){
+    this.$store.dispatch('getUsers')
     if(this.isLoggedIn) this.$store.dispatch('getCurrentUser')
   },
 }

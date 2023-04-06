@@ -11,32 +11,34 @@ var store = createStore(Vuex.Store, {
       currentUser: {},
       passwordConfirmation: undefined,
       user: {},
-      userId: undefined,
-      users: undefined,
+      userId: 0,
+      users: {},
       tweet: {},
+      tweetId: 0,
       tweets: {
-        currentUser: undefined,
-        user: undefined,
-        searchResult: undefined,
+        currentUser: [],
+        user: [],
+        searchResult: [],
+        followings: [],
+        reply: [], 
       },
+      followings: [],
+      followers: [],
       searchResultTweets: undefined,
       mode: {
-        tweets: undefined,
+        tweets: '',
         page: 'introduction',
       },
       key: undefined,
       // category: undefined,
       password: undefined,
       destroyUserDisabled: true,
-      errorMessage: {
-        user: {
-          nickname: '長さは8文字以上'
-        },
-        tweets: {},
-      },
     }
   },
   getters: {
+    mode(state){
+      return state.mode
+    },
     server(state){
       return state.server
     },
@@ -45,6 +47,9 @@ var store = createStore(Vuex.Store, {
     },
     userId(state){
       return state.userId
+    },
+    tweetId(state){
+      return state.tweetId
     },
     user(state){
       return state.user
@@ -70,11 +75,18 @@ var store = createStore(Vuex.Store, {
     users(state){
       return state.users
     },
+    tweets(state){
+      return state.tweets[state.mode.tweets]
+    },
     tweet(state){
       return state.tweet
+      // return state.tweets[state.mode.tweets].find((t)=>{ return t.id === state.tweetId })
     },
-    tweets(state){
-      return state.tweets[`${state.mode.tweets}`]
+    following(state){
+      return state.followings.find((f)=>{ return f.id === state.tweet.user_id })
+    },
+    tweetUser(state){
+      return state.users.find((u)=>{ return u.id === state.tweet.user_id })
     },
     searchResultTweets(state){
       return state.searchResultTweets
@@ -106,13 +118,21 @@ var store = createStore(Vuex.Store, {
           create: `/users/${state.cookieUserId}/tweets`,
           show: {
             currentUser: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
-            user: `/users/${state.userId}/tweets/${state.tweet.id}`,
+            user: `/users/${state.userId}/tweets/${state.tweetId}`,
           },
           update: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
           destroy: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
+          reply: `/users/${state.cookieUserId}/tweets/${state.tweetId}/replies`,
+          replies: `/users/${state.userId}/tweets/${state.tweetId}/replies`,
         },
         application: {
           search: `/${state.key}`,
+        },
+        relationships: {
+          follow: `/users/${state.cookieUserId}/follow`,
+          unfollow: `/users/${state.cookieUserId}/unfollow`,
+          followings: `/users/${state.cookieUserId}/followings`,
+          followers: `/users/${state.cookieUserId}/followers`,
         },
         // categories: {
         //   index: `/categories`,
@@ -135,6 +155,9 @@ var store = createStore(Vuex.Store, {
   mutations: {
     setCurrentUser(state, payload){
       state.currentUser = payload.user
+    },
+    setUsers(state, payload){
+      state.users = payload.setUser
     },
     setNickname(state, payload){
       state.user.nickname = payload.value
@@ -188,7 +211,10 @@ var store = createStore(Vuex.Store, {
       state.searchResultUser = payload.user
     },
     setTweet(state,payload){
-      state.tweet = payload
+      state.tweet = payload.tweet
+    },
+    setTweetId(state, payload){
+      state.tweetId = payload.tweetId
     },
     clearTweet(state){
       state.tweet = {}
@@ -197,7 +223,7 @@ var store = createStore(Vuex.Store, {
       state.mode.tweets = payload.mode.tweets
     },
     setTweets(state, payload){
-      state.tweets[`${state.mode.tweets}`] = payload.tweets
+      state.tweets[state.mode.tweets] = payload.tweets
     },
     setSearchResultTweets(state, payload){
       state.searchResultTweets = payload.tweets
@@ -214,6 +240,18 @@ var store = createStore(Vuex.Store, {
     setDestroyUserDisabled(state, payload){
       state.destroyUserDisabled = payload.value
     },
+    setFollowingsTweets(state, payload){
+      state.followingsTweets[payload.followingId] = payload.tweets
+    },
+    setFollowings(state, payload){
+      state.followings = payload.followings
+    },
+    setFollowersTweets(state, payload){
+      state.followersTweets[payload.followerId] = payload.tweets
+    },
+    setFollowers(state, payload){
+      state.followers = payload.followers
+    },
   },
   actions: {
     getCurrentUser(context, payload){
@@ -226,7 +264,18 @@ var store = createStore(Vuex.Store, {
         console.log(error)
       })
     },
+    getUsers(context, payload){
+      axios.get(context.getters.server + context.getters.api.users.index)
+      .then((res) => {
+        console.log(`GET ${context.getters.api.users.index} ${res.data.users[0].nickname}`)
+        context.commit('setUsers', { users: res.data.user })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
     getUser(context, payload){
+      console.log(context.state.tweets.user)
       axios.get(context.getters.server + context.getters.api.users.show.user)
       .then((res) => {
         console.log(`GET ${context.getters.api.users.show.user} ${res.data.user.nickname}`)
@@ -235,6 +284,53 @@ var store = createStore(Vuex.Store, {
       .catch(error => {
         console.log(error)
       })
+    },
+    follow(context, payload){
+      axios.post(context.getters.server + context.getters.api.relationships.follow + payload.api)
+      .then((res) => {
+        console.log(`POST ${context.getters.api.relationships.follow + payload.api} ${res.data.followed_id}`)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    unfollow(context, payload){
+      axios.delete(context.getters.server + context.getters.api.relationships.unfollow + payload.api)
+      .then((res) => {
+        console.log(`DELETE ${context.getters.api.relationships.unfollow + payload.api} ${res.data.followed_id}`)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    async getFollowings(context, payload){
+      await axios.get(context.getters.server + context.getters.api.relationships.followings)
+        .then((res) => {
+          console.log(`GET ${context.getters.api.users.followings} ${res.data.followings[0].nickname}`)
+          context.commit('setFollowings', { followings: res.data.followings })
+          this.dispatch('getFollowingsTweets')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    async getFollowingsTweets(context, payload){
+      await Promise.all(context.state.followings.map((following)=>{
+        return new Promise((resolve, reject) => {
+          axios.get(context.getters.server + `/users/${following.id}/tweets`)
+            .then((res) => {
+              console.log(`GET /users/${following.id}/tweets ${res.data.tweets[0]?.message}`)
+              context.commit('setTweetsMode', { mode: { tweets:  'followings' } })
+              context.commit('setTweets', { tweets: res.data.tweets })
+              resolve()
+            })
+            .catch(error => {
+              console.log(error)
+              reject()
+            })
+          })
+        })
+      )
     },
     updateUser(context, payload){
       axios.patch(context.getters.server + context.getters.api.users.update, context.getters.user)
@@ -256,7 +352,7 @@ var store = createStore(Vuex.Store, {
       })
     },
     createTweet(context, payload){
-      axios.post(context.getters.server + context.getters.api.tweets.create, context.getters.tweet)
+      axios.post(context.getters.server + context.getters.api.tweets.create, payload)
       .then((res) => {
         console.log(`POST ${context.getters.api.tweets.create} ${res.data.tweet.message}`)
         context.commit('clearTweet')
@@ -265,19 +361,55 @@ var store = createStore(Vuex.Store, {
         console.log(error)
       })
     },
-    getTweets(context, payload){
-      axios.get(context.getters.server + context.getters.api.tweets.index[`${payload.mode.user}`])
+    getTweet(context, payload){
+      axios.get(context.getters.server + context.getters.api.tweets.show.user)
       .then((res) => {
-        console.log('GET ' + context.getters.api.tweets.index[`${payload.mode.user}`] + ' ' + res.data.tweets.first?.message)
+        console.log('GET ' + context.getters.api.tweets.show.user + ' ' + res.data.tweet.message)
+        context.commit('setTweet', { tweet: res.data.tweet })
+        this.dispatch('getReplies', { mode: { tweets: 'reply' } })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    async createReply(context, payload){
+      await axios.post(context.getters.server + context.getters.api.tweets.reply, payload)
+      .then((res) => {
+        console.log(`POST ${context.getters.api.tweets.reply} Reply:${res.data.reply_id} Replied:${res.data.replied_id}`)
+        // context.commit('clearTweet')
+        this.dispatch('getReplies', { mode: { tweets: 'reply' } })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    async getReplies(context, payload){
+      await axios.get(context.getters.server + context.getters.api.tweets.replies)
+      .then((res) => {
+        console.log('GET ' + context.getters.api.tweets.replies + ' ' + res.data.tweets[0].message)
         context.commit('setTweetsMode', { mode: payload.mode })
-        context.commit('setTweets', { list: res.data.tweets })
+        context.commit('setTweets', { tweets: res.data.tweets })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    },
+    getTweets(context, payload){
+      context.commit('setUserId', { userId: payload.userId })
+      axios.get(context.getters.server + context.getters.api.tweets.index[payload.mode])
+      .then((res) => {
+        console.log(res)
+        console.log('GET ' + context.getters.api.tweets.index[payload.mode] + ' ' + res.data.tweets[0].message)
+        context.commit('setTweetsMode', { mode: payload.mode })
+        context.commit('setTweets', { tweets: res.data.tweets })
+        console.log(context.getters.tweets)
       })
       .catch(error => {
         console.log(error)
       })
     },
     destroyTweet(context, payload){
-      context.commit('setTweet', payload.tweet)
+      context.commit('setTweet', { tweet: payload.tweet })
       axios.delete(context.getters.server + context.getters.api.tweets.destroy)
       .then((res) => {
         context.commit('clearTweet')

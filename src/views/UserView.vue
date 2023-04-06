@@ -23,14 +23,15 @@ export default {
     },
     userId(){
       return this.$store.getters.userId
-    },        
+    }, 
   },
   methods: {
  
   },
   created(){
     this.$store.commit('setUserId', { userId: this.$route.params.id })
-    this.$store.dispatch('getUser').then(this.$store.dispatch('getTweets', { mode: { user: 'user', tweets: 'user' } }))
+    console.log(this.userId)
+    this.$store.dispatch('getUser').then(this.$store.dispatch('getTweets', { userId: this.userId,  mode: { tweets: 'user' } }))
   },
 }
 </script>

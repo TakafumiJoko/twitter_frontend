@@ -17,10 +17,11 @@
         this.$store.dispatch('getData', { mode: { tweets: 'searchResult' } })
       },
       getUserTweets(user){
-        this.$store.dispatch('getTweets', { user: user, mode: 'user' })
+        this.$store.dispatch('getTweets', { userId: user.id, mode: 'user' })
+        this.$router.push({ name: 'user', params: { id: user.id } })
       },
       getSearchResultTweets(){
-        this.$store.dispatch('getTweets', { mode: { tweets: 'searchResult' } })
+        this.$store.dispatch('getTweets', { user: 'user', mode: { tweets: 'searchResult' } })
       },
     },
   }

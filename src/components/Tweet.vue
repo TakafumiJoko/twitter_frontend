@@ -1,31 +1,53 @@
 <script>
+import { ssrContextKey } from 'vue'
+import TweetModal from './TweetModal.vue'
+
 export default {
   name: "Tweet",
+  components: { 
+    TweetModal,
+  },
   data() {
     return {
+      isVisible: undefined
     }
   },
   computed: {
     currentUser(){
       return this.$store.getters.currentUser
-    }
+    },
+    tweetUser(){
+      return this.$store.getters.tweetUser
+    },
   },
   props: ["tweet"],
   methods: {
     destroyTweet(){
       this.$store.dispatch('destroyTweet', { tweet: this.tweet })
     },
+    showTweetModal(){
+      this.isVisible = true
+    },
+    closeTweetModal(){
+      this.isVisible = false
+    },
+  },
+  created(){
+    this.$store.commit('setTweet', { tweet: this.tweet })
   },
 }
 </script>
 
 <template>
-  <div v-if="tweet.user_id === currentUser.id">
+  <div v-if="tweet.user_id === currentUser.id" @click="$router.push({ name: 'tweetDetail', params: { user_id: currentUser.id, id: tweet.id } })">
     <!-- <span @click="showEditTweetModal">・・・</span> -->
     {{ tweet.message }}
     <button @click="destroyTweet">削除</button>
   </div>
-  <div v-else>
+  <div v-else @click="$router.push({ name: 'tweetDetail', params: { user_id: tweetUser.id, id: tweet.id } })">
+    {{ tweetUser.nickname }}
+    <span @click="showTweetModal">・・・</span>
     {{ tweet.message }}
+    <TweetModal :tweet="tweet" :isVisible="isVisible" @close="closeTweetModal" />
   </div>
 </template>
