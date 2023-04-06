@@ -14,8 +14,7 @@ export default {
   },
   methods: {
     createTweet(){
-      console.log(this.message)
-      this.$store.dispatch('createTweet')
+      this.$store.dispatch('createTweet', { tweet: { message: this.message } })
     }
   },
 }

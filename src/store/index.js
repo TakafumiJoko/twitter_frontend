@@ -134,6 +134,9 @@ var store = createStore(Vuex.Store, {
           followings: `/users/${state.cookieUserId}/followings`,
           followers: `/users/${state.cookieUserId}/followers`,
         },
+        hashTags: {
+          create: `/tweets/${state.tweet.id}/hash_tags`
+        },
         // categories: {
         //   index: `/categories`,
         // },
@@ -351,15 +354,41 @@ var store = createStore(Vuex.Store, {
         console.log(error)
       })
     },
-    createTweet(context, payload){
-      axios.post(context.getters.server + context.getters.api.tweets.create, payload)
+    async createTweet(context, payload){
+      await axios.post(context.getters.server + context.getters.api.tweets.create, payload)
       .then((res) => {
         console.log(`POST ${context.getters.api.tweets.create} ${res.data.tweet.message}`)
-        context.commit('clearTweet')
+        context.commit('setTweet', { tweet: res.data.tweet })
+        if(/\s#.+/.test(res.data.tweet.message)) this.dispatch('createHashTags', { tweet: res.data.tweet })
       })
       .catch(error => {
         console.log(error)
       })
+    },
+    async createHashTags(context, payload){
+      var hash_tags = payload.tweet.message.match(/(^|\s)#\w+/g)
+      hash_tags = hash_tags.map(
+        (h)=>{
+          if(/\s/.test(h)){
+            return h.split(/\s/)[1]
+          }else{
+            return h
+          }
+        }
+      )
+      await Promise.all(hash_tags.map((h)=>{
+        return new Promise((resolve, reject)=>{
+          axios.post(context.getters.server + context.getters.api.hashTags.create, { hash_tag: { value: h } })
+            .then((res)=>{
+              console.log(`POST ${context.getters.api.hashTags.create} ${res.data.hash_tag.value}`)
+              resolve()
+            })
+            .catch(err=>{
+              console.log(err)
+              reject()
+            })
+        })
+      }))
     },
     getTweet(context, payload){
       axios.get(context.getters.server + context.getters.api.tweets.show.user)
