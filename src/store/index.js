@@ -7,8 +7,8 @@ var store = createStore(Vuex.Store, {
   state() {
     return {
       server: 'http://127.0.0.1:3000',
-      cookieUserId: cookieUserId(),
-      currentUser: {},
+      cookieUserId: undefined,
+      currentUser: undefined,
       passwordConfirmation: undefined,
       user: {},
       userId: 0,
@@ -36,14 +36,17 @@ var store = createStore(Vuex.Store, {
     }
   },
   getters: {
+    cookieUserId(state){
+      return state.cookieUserId
+    },
+    isLoggedIn(state){
+      return state.cookieUserId ? true : false 
+    },
     mode(state){
       return state.mode
     },
     server(state){
       return state.server
-    },
-    isLoggedIn(state){
-      return state.cookieUserId ? true : false
     },
     userId(state){
       return state.userId
@@ -60,13 +63,10 @@ var store = createStore(Vuex.Store, {
     currentUser(state){
       return state.currentUser
     },
-    cookieUserId(state){
-      return state.cookieUserId
-    },
     passwordConfirmation(state){
       return state.passwordConfirmation
     },
-    createUserDisabled(state){
+    signupDisabled(state){
       return !(state.user.password != null && state.user.password == state.passwordConfirmation)
     },
     contact(state){
@@ -100,7 +100,6 @@ var store = createStore(Vuex.Store, {
     api(state) {
       return {
         users: {
-          login: '/login',
           index: '/users',
           create: '/users',
           show: {
@@ -109,6 +108,10 @@ var store = createStore(Vuex.Store, {
           },
           update: `/users/${state.cookieUserId}`,
           destroy: `/users/${state.cookieUserId}`,
+        },
+        sessions: {
+          login: '/login',
+          logout: '/logout'
         },
         tweets: {
           index: {
@@ -156,6 +159,9 @@ var store = createStore(Vuex.Store, {
     },
   },
   mutations: {
+    setCookieUserId(state, payload){
+      state.cookieUserId = payload.userId
+    },
     setCurrentUser(state, payload){
       state.currentUser = payload.user
     },

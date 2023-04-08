@@ -1,5 +1,5 @@
 <script>
-  import { login } from "../modules/session.js"
+  import { logIn, cookieUserId } from "../modules/session.js"
   import { nicknameRules, isUnique } from "../modules/validation"
 
   export default {
@@ -20,7 +20,7 @@
       }
     },
     computed: {
-      createUserDisabled(){
+      signupDisabled(){
         return !(this.user.password?.trim() && this.user.password === this.user.passwordConfirmation)
       },
       server(){
@@ -34,31 +34,28 @@
       },
     },
     methods: {
-      createUser(){
-        axios.post(
-          this.server + this.api.users.create, this.user
-        )
+      signup(){
+        axios.post(this.server + this.api.users.create, this.user)
         .then((res) => {
-          console.log(`POST ${this.api.users.create} ${res.data.nickname}`)
+          console.log(`POST ${this.api.users.create} ${res.data.user.nickname}`)
+          this.$store.commit('setCurrentUser', { user: res.data.user })
+          logIn(res.data.user)
+          this.$store.commit('setCookieUserId', { userId: cookieUserId() })
           this.$router.push({ name: 'home' })
-          login(res.data.user)
         })
         .catch(error => {
           console.log(error)
         })
       },
     },
-    created(){
-      this.$store.reset()
-    },
     mounted(){
-      isUnique()
+      // isUnique()
     }
   }
 </script>
 
 <template>
-  <VForm @submit.prevent="createUser">
+  <VForm @submit.prevent="signup">
     <VTextField 
       label="名前" 
       v-model="user.nickname"
@@ -74,6 +71,11 @@
       <span @click="contact='phoneNumber'">代わりに電話番号を登録する</span>
     </div>
     <VTextField
+      label="生年月日"
+      v-model="user.birthday"
+      type="date">
+    </VTextField>
+    <VTextField
       label="パスワード"
       v-model="user.password"
       type="password">
@@ -83,7 +85,7 @@
       v-model="user.passwordConfirmation"
       type="password">
     </VTextField>
-    <VBtn @click="createUser" :disabled="createUserDisabled">
+    <VBtn @click="signup" :disabled="signupDisabled">
       次へ
     </VBtn>
   </VForm>

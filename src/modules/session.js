@@ -1,14 +1,17 @@
-const login = function login(user) {
+const logIn = function logIn(user) {
   $cookies.set("userId", user.id)
 }
 
-const logout = function logout() {
+const logOut = function logOut() {
   $cookies.remove("userId")
-  this.$store.reset()
 }
 
 const cookieUserId = function cookieUserId(){
   return $cookies.get("userId")
 }
 
-export { login, logout, cookieUserId }
+const isLoggedIn = function isLoggedIn(){
+  return $cookies.get("userId") ? true : false
+}
+
+export { logIn, logOut, cookieUserId, isLoggedIn }

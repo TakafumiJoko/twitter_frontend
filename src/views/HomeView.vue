@@ -16,15 +16,15 @@ export default {
     TweetList,
     SearchForm,
   },
-  created(){
-    this.$store.dispatch('getTweets', { mode: { user: 'currentUser', tweets: 'currentUser' } })
-    this.$store.dispatch('getFollowings')
-  },
+  // created(){
+  //   this.$store.dispatch('getTweets', { mode: { user: 'currentUser', tweets: 'currentUser' } })
+  //   this.$store.dispatch('getFollowings')
+  // },
 }
 </script>
 
 <template>
-  <TweetForm/>
+  <!-- <TweetForm/>
   <TweetList />  
-  <SearchForm></SearchForm>
+  <SearchForm></SearchForm> -->
 </template>

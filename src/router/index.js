@@ -8,11 +8,12 @@ import SearchResultView from '../views/SearchResultView.vue'
 import SettingView from '../views/SettingView.vue'
 import SettingAccountView from '../views/SettingAccountView.vue'
 import SettingAccountDeactiveView from '../views/SettingAccountDeactiveView.vue'
-import { cookieUserId } from '../modules/session'
+import { isLoggedIn } from '../modules/session'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import SignupModalView from '../views/SignupView.vue'
 import LoginModalView from '../views/LoginView.vue'
 import TweetDetail from '../components/TweetDetail.vue'
+import AdminTrendView from '../views/AdminTrendView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,12 +83,20 @@ const router = createRouter({
       component: SettingAccountDeactiveView,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/admin/trend',
+      name: 'adminTrend',
+      component: AdminTrendView,
+      meta: { requiresAuth: true },
+    },
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.requiresAuth && cookieUserId() == null){
-    next({ name: "beforeLogin" })
+  if(to.meta.requiresAuth && !isLoggedIn()){
+    next({ name: 'beforeLogin' })
+  } else if(!to.meta.requiresAuth && isLoggedIn()){
+    next({ name: 'home' })
   } else {
     next()
   }

@@ -1,15 +1,14 @@
 <script>
-  import { login } from "../modules/session.js"
+  import { logIn, cookieUserId } from "../modules/session.js"
 
   export default {
     name: "LoginView",
     data() {
       return {
-        user: {
+        session: {
           phoneNumber: '',
           email: '',
           password: '',
-          passwordConfirmation: '',
         },
         contact: 'phoneNumber',
       }
@@ -23,10 +22,14 @@
       },
     },
     methods: {
-      loginUser(){
-        axios.post(this.server + this.api.users.login, this.user)
+      login(){
+        axios.post(this.server + this.api.sessions.login, this.session)
         .then((res) => {
-          console.log(`POST ${context.getters.api.users.login} ${res.data.user.nickname}`)
+          console.log(`SUCCESS POST ${this.api.sessions.login} ${res.data.user.nickname}`)
+          this.$store.commit('setCurrentUser', { user: res.data.user })
+          logIn(res.data.user)
+          this.$store.commit('setCookieUserId', { userId: cookieUserId() })
+          this.$router.push({ name: 'home' })
         })
         .catch(error => {
           console.log(error)
@@ -34,32 +37,26 @@
       },
     },
     created(){
-      this.$store.reset()
     },
   }
 </script>
 
 <template>
-  <VForm @submit.prevent="loginUser">
+  <VForm @submit.prevent="login">
     <div v-if="contact == 'phoneNumber'">
-      <VTextField label="電話番号" v-model="user.phoneNumber" />
+      <VTextField label="電話番号" v-model="session.phoneNumber" />
       <span @click="contact='email'">代わりにメールアドレスを登録する</span>
     </div>
     <div v-if="contact == 'email'">
-      <VTextField label="メールアドレス" v-model="user.email" />
+      <VTextField label="メールアドレス" v-model="session.email" />
       <span @click="contact='phoneNumber'">代わりに電話番号を登録する</span>
     </div>
     <VTextField
       label="パスワード"
-      v-model="user.password"
+      v-model="session.password"
       type="password">
     </VTextField>
-    <VTextField
-      label="パスワード確認"
-      v-model="user.passwordConfirmation"
-      type="password">
-    </VTextField>
-    <VBtn @click="loginUser">
+    <VBtn @click="login">
       次へ
     </VBtn>
   </VForm>

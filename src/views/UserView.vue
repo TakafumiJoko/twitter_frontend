@@ -3,7 +3,6 @@ import Profile from "../components/Profile.vue"
 import ProfileForm from "../components/ProfileForm.vue"
 import SearchForm from "../components/SearchForm.vue"
 import TweetList from "../components/TweetList.vue"
-import { cookieUserId } from "../modules/session"
 
 export default {
   name: "UserView",
