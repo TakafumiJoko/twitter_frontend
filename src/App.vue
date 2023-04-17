@@ -43,9 +43,6 @@ export default {
       <RouterLink :to="{ name: 'setting' }">Setting</RouterLink>
       <Account />
     </nav>
-    <nav>
-      <RouterLink :to="{ name: 'adminTrend' }">トレンド管理</RouterLink>
-    </nav>
   </header>
   <main>
     <RouterView></RouterView>

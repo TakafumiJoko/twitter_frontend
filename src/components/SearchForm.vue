@@ -8,13 +8,14 @@
       searchResultTweets(){
         return this.$store.getters.searchResultTweets
       },
-      key(){
-        return this.$store.getters.key
+      searchWord(){
+        return this.$store.getters.searchWord
       },
     },
     methods: {
       getData() {
-        this.$store.dispatch('getData', { mode: { tweets: 'searchResult' } })
+        this.$store.dispatch('searchUsers')
+        // this.$store.dispatch('getData', { mode: { tweets: 'searchResult' } })
       },
       getUserTweets(user){
         this.$store.dispatch('getTweets', { userId: user.id, mode: 'user' })
@@ -30,7 +31,7 @@
 <template>
   <VForm @submit.prevent="getData">
     <VTextField
-      @change="$store.commit('setKey', { key: $event.target.value })"
+      @change="$store.commit('setSearchWord', { searchWord: $event.target.value })"
     ></VTextField>
     <VBtn @click="getData">検索</VBtn>
   </VForm>

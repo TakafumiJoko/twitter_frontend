@@ -13,7 +13,6 @@ import BeforeLoginView from '../views/BeforeLoginView.vue'
 import SignupModalView from '../views/SignupView.vue'
 import LoginModalView from '../views/LoginView.vue'
 import TweetDetail from '../components/TweetDetail.vue'
-import AdminTrendView from '../views/AdminTrendView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,7 +53,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/search_result/:key',
+      path: '/search_result/:searchWord',
       name: 'searchResult',
       component: SearchResultView,
       meta: { requiresAuth: true },
@@ -81,12 +80,6 @@ const router = createRouter({
       path: '/setting/account/deactive',
       name: 'settingAccountDeactive',
       component: SettingAccountDeactiveView,
-      meta: { requiresAuth: true },
-    },
-    {
-      path: '/admin/trend',
-      name: 'adminTrend',
-      component: AdminTrendView,
       meta: { requiresAuth: true },
     },
   ]

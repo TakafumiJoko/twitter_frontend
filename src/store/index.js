@@ -29,7 +29,7 @@ var store = createStore(Vuex.Store, {
         tweets: '',
         page: 'introduction',
       },
-      key: undefined,
+      searchWord: undefined,
       // category: undefined,
       password: undefined,
       destroyUserDisabled: true,
@@ -91,8 +91,8 @@ var store = createStore(Vuex.Store, {
     searchResultTweets(state){
       return state.searchResultTweets
     },
-    key(state){
-      return state.key
+    searchWord(state){
+      return state.searchWord
     },
     // category(state){
     //   return state.category
@@ -108,6 +108,7 @@ var store = createStore(Vuex.Store, {
           },
           update: `/users/${state.cookieUserId}`,
           destroy: `/users/${state.cookieUserId}`,
+          search: '/users'
         },
         sessions: {
           login: '/login',
@@ -127,9 +128,10 @@ var store = createStore(Vuex.Store, {
           destroy: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
           reply: `/users/${state.cookieUserId}/tweets/${state.tweetId}/replies`,
           replies: `/users/${state.userId}/tweets/${state.tweetId}/replies`,
+          search: '/tweets'
         },
-        application: {
-          search: `/${state.key}`,
+        search: {
+          data: '/searches/data',
         },
         relationships: {
           follow: `/users/${state.cookieUserId}/follow`,
@@ -237,8 +239,8 @@ var store = createStore(Vuex.Store, {
     setSearchResultTweets(state, payload){
       state.searchResultTweets = payload.tweets
     },
-    setKey(state, payload){
-      state.key = payload.key
+    setSearchWord(state, payload){
+      state.searchWord = payload.searchWord
     },
     // setCategory(state, payload){
     //   state.category = payload.category
@@ -283,6 +285,11 @@ var store = createStore(Vuex.Store, {
         console.log(error)
       })
     },
+    async searchUsers(context, payload){
+      const res = await axios.get(context.getters.server + context.getters.api.users.search, { params: { q: { nickname_cont: context.getters.searchWord } }})
+      console.log(`GET ${location.pathname} ${res.data.users[0].nickname}`)
+      context.commit('setUsers', { users: res.data.users })
+    },  
     getUser(context, payload){
       console.log(context.state.tweets.user)
       axios.get(context.getters.server + context.getters.api.users.show.user)
@@ -454,14 +461,15 @@ var store = createStore(Vuex.Store, {
         console.log(error)
       })
     },
-    getData(context, payload){
-      axios.get(context.getters.server + context.getters.api.application.search)
-      .then((res)=>{
-        context.commit('setUsers', { users: res.data.users})
-        context.commit('setSearchResultTweets', { tweets: res.data.tweets })
-      }).catch((err)=>{
-        console.error(err)
-      })
+    async getData(context, payload){
+      const res = await axios.get(context.getters.server + context.getters.api.search.data, context.getters.searchWord)
+      // console.log(`GET ${this.getters.api.searches.data} ${res.data.users} ${res.data.tweets}`)
+      // .then((res)=>{
+      //   context.commit('setUsers', { users: res.data.users})
+      //   context.commit('setSearchResultTweets', { tweets: res.data.tweets })
+      // }).catch((err)=>{
+      //   console.error(err)
+      // })
     },
     judgePassword(context, payload){
       context.commit('setPasswordConfirmation', { value: payload.value })
