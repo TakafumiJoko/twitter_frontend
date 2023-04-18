@@ -1,13 +1,13 @@
 <script>
 // import { ssrContextKey } from 'vue'
-// import TweetModal from './TweetModal.vue'
-import TweetList from './TweetList.vue'
+// import tweetModal from './tweetModal.vue'
+import tweetList from './tweetList.vue'
 
 export default {
-  name: "TweetDetail",
+  name: "tweetDetail",
   components: { 
-    TweetList,
-    // TweetModal,
+    tweetList,
+    // tweetModal,
   },
   data() {
     return {
@@ -27,13 +27,13 @@ export default {
     },
   },
   methods: {
-    // destroyTweet(){
-    //   this.$store.dispatch('destroyTweet', { tweet: this.tweet })
+    // destroytweet(){
+    //   this.$store.dispatch('destroytweet', { tweet: this.tweet })
     // },
-    // showTweetModal(){
+    // showtweetModal(){
     //   this.isVisible = true
     // },
-    // closeTweetModal(){
+    // closetweetModal(){
     //   this.isVisible = false
     // },
     createReply(){
@@ -49,18 +49,18 @@ export default {
 </script>
 
 <template>
-  <!-- <div v-if="tweet.user_id === currentUser.id" @click="$router.push({ name: 'TweetDetail', params: { user_id: currentUser.id, id: tweet.id } })">
+  <!-- <div v-if="tweet.user_id === currentUser.id" @click="$router.push({ name: 'tweetDetail', params: { user_id: currentUser.id, id: tweet.id } })">
     {{ tweet.message }}
-    <button @click="destroyTweet">削除</button>
+    <button @click="destroytweet">削除</button>
   </div>
-  <div v-else @click="$router.push({ name: 'TweetDetailView', params: { user_id: tweetUser.id, id: tweet.id } })">
+  <div v-else @click="$router.push({ name: 'tweetDetailView', params: { user_id: tweetUser.id, id: tweet.id } })">
     {{ tweetUser.nickname }}
-    <span @click="showTweetModal">・・・</span>
+    <span @click="showtweetModal">・・・</span>
     {{ tweet.message }}
-    <TweetModal :tweet="tweet" :isVisible="isVisible" @close="closeTweetModal" />
+    <tweetModal :tweet="tweet" :isVisible="isVisible" @close="closetweetModal" />
   </div> -->
   {{ tweet.message }}
   <input type="text" v-model="message">
   <button @click="createReply">返信</button>
-  <TweetList />
+  <tweetList />
 </template>

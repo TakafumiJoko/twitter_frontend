@@ -67,7 +67,7 @@ const router = createRouter({
     {
       path: '/users/:user_id/tweets/:id',
       name: 'tweetDetail',
-      component: TweetDetail,
+      component: tweetDetail,
       meta: { requiresAuth: true },
     },
     {

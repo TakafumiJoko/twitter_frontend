@@ -1,9 +1,9 @@
 <script>
-import Tweet from "./Tweet.vue"
+import tweet from "./tweet.vue"
 export default {
-  name: "Tweets",
+  name: "tweets",
   components: {
-    Tweet,
+    tweet,
   },
   data() {
     return {
@@ -24,5 +24,5 @@ export default {
 </script>
 
 <template>
-  <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" /> 
+  <tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" /> 
 </template>

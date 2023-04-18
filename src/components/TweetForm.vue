@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "TweetForm",
+  name: "tweetForm",
  
   data() {
     return {
@@ -13,8 +13,8 @@ export default {
     },
   },
   methods: {
-    createTweet(){
-      this.$store.dispatch('createTweet', { tweet: { message: this.message } })
+    tweet(){
+      this.$store.dispatch('tweet', { tweet: { message: this.message } })
     }
   },
 }
@@ -26,7 +26,7 @@ export default {
       <VTextarea
         v-model="message"
       ></VTextarea>
-      <VBtn @click="createTweet">ツイートする</VBtn>
+      <VBtn @click="tweet">ツイートする</VBtn>
     </VForm>
   </div>
 </template>

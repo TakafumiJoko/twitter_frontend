@@ -1,5 +1,5 @@
 <script>
-import TweetList from '../components/TweetList.vue';
+import tweetList from '../components/tweetList.vue';
 import SearchForm from '../components/SearchForm.vue';
 
 export default {
@@ -9,7 +9,7 @@ export default {
     }
   },
   components: {
-    TweetList,
+    tweetList,
     SearchForm,
   },
 }
@@ -17,5 +17,5 @@ export default {
 
 <template>
   <SearchForm></SearchForm>
-  <TweetList></TweetList>
+  <tweetList></tweetList>
 </template>

@@ -7,12 +7,12 @@ export default {
     }
   },
   computed: {
-    searchResultTweets(){
-      return this.$store.getters.searchResultTweets
+    searchResulttweets(){
+      return this.$store.getters.searchResulttweets
     }
   },
   created(){
-    console.log(this.searchResultTweets)
+    console.log(this.searchResulttweets)
   }
 }
 </script>
