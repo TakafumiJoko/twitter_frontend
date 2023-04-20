@@ -1,0 +1,5 @@
+const TWEET_MAX_LENGTH = 140
+
+export {
+  TWEET_MAX_LENGTH,
+}

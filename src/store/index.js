@@ -1,13 +1,9 @@
 import Vuex from 'vuex'
 import { createStore } from 'vuex-extensions'
-import { cookieUserId } from '../modules/session'
-
 
 var store = createStore(Vuex.Store, {
   state() {
     return {
-      server: 'http://127.0.0.1:3000',
-      cookieUserId: undefined,
       currentUser: undefined,
       passwordConfirmation: undefined,
       user: {},
@@ -102,57 +98,6 @@ var store = createStore(Vuex.Store, {
     // category(state){
     //   return state.category
     // },
-    api(state) {
-      return {
-        users: {
-          index: '/users',
-          create: '/users',
-          show: {
-            currentUser: `/users/${state.cookieUserId}`,
-            user: `/users/${state.userId}`,
-          },
-          update: `/users/${state.cookieUserId}`,
-          destroy: `/users/${state.cookieUserId}`,
-          search: '/users'
-        },
-        sessions: {
-          login: '/login',
-          logout: '/logout'
-        },
-        tweets: {
-          index: {
-            currentUser: `/users/${state.cookieUserId}/tweets`,
-            user: `/users/${state.userId}/tweets`,
-          },
-          create: `/users/${state.cookieUserId}/tweets`,
-          show: {
-            currentUser: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
-            user: `/users/${state.userId}/tweets/${state.tweetId}`,
-          },
-          update: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
-          destroy: `/users/${state.cookieUserId}/tweets/${state.tweet.id}`,
-          reply: `/users/${state.cookieUserId}/tweets/${state.tweetId}/replies`,
-          replies: `/users/${state.userId}/tweets/${state.tweetId}/replies`,
-          search: '/tweets'
-        },
-        search: {
-          data: '/searches/data',
-        },
-        relationships: {
-          follow: `/users/${state.cookieUserId}/follow`,
-          unfollow: `/users/${state.cookieUserId}/unfollow`,
-          followings: `/users/${state.cookieUserId}/followings`,
-          followers: `/users/${state.cookieUserId}/followers`,
-        },
-        hashTags: {
-          index: `/categories/${state.category.id}/hash_tags`,
-        },
-        categories: {
-          main: '/main',
-          index: '/categories',
-        },
-      }
-    },
     categories(state){
       return state.categories
     },
@@ -233,7 +178,7 @@ var store = createStore(Vuex.Store, {
     setSearchResultUser(state){
       state.searchResultUser = payload.user
     },
-    settweet(state,payload){
+    setTweet(state,payload){
       state.tweet = payload.tweet
     },
     setTweetId(state, payload){
@@ -289,191 +234,179 @@ var store = createStore(Vuex.Store, {
     },
   },
   actions: {
-    getCurrentUser(context, payload){
-      axios.get(context.getters.server + context.getters.api.users.show.currentUser)
-      .then((res) => {
-        context.commit('setCurrentUser', { user: res.data.user })
-        console.log(`GET ${context.getters.api.users.show.currentUser} ${res.data.user.nickname}`)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    getUsers(context, payload){
-      axios.get(context.getters.server + context.getters.api.users.index)
-      .then((res) => {
-        console.log(`GET ${context.getters.api.users.index} ${res.data.users[0].nickname}`)
-        context.commit('setUsers', { users: res.data.user })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    async searchUsers(context, payload){
-      const res = await axios.get(context.getters.server + context.getters.api.users.search, { params: { q: { nickname_cont: context.getters.searchWord } }})
-      console.log(`GET ${location.pathname} ${res.data.users[0].nickname}`)
-      context.commit('setUsers', { users: res.data.users })
-    },  
-    getUser(context, payload){
-      console.log(context.state.tweets.user)
-      axios.get(context.getters.server + context.getters.api.users.show.user)
-      .then((res) => {
-        console.log(`GET ${context.getters.api.users.show.user} ${res.data.user.nickname}`)
-        context.commit('setUser', { user: res.data.user })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    follow(context, payload){
-      axios.post(context.getters.server + context.getters.api.relationships.follow + payload.api)
-      .then((res) => {
-        console.log(`POST ${context.getters.api.relationships.follow + payload.api} ${res.data.followed_id}`)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    unfollow(context, payload){
-      axios.delete(context.getters.server + context.getters.api.relationships.unfollow + payload.api)
-      .then((res) => {
-        console.log(`DELETE ${context.getters.api.relationships.unfollow + payload.api} ${res.data.followed_id}`)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    async getFollowings(context, payload){
-      await axios.get(context.getters.server + context.getters.api.relationships.followings)
-        .then((res) => {
-          console.log(`GET ${context.getters.api.users.followings} ${res.data.followings[0].nickname}`)
-          context.commit('setFollowings', { followings: res.data.followings })
-          this.dispatch('getFollowingstweets')
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    async getFollowingstweets(context, payload){
-      await Promise.all(context.state.followings.map((following)=>{
-        return new Promise((resolve, reject) => {
-          axios.get(context.getters.server + `/users/${following.id}/tweets`)
-            .then((res) => {
-              console.log(`GET /users/${following.id}/tweets ${res.data.tweets[0]?.message}`)
-              context.commit('setTweetsMode', { mode: { tweets:  'followings' } })
-              context.commit('setTweets', { tweets: res.data.tweets })
-              resolve()
-            })
-            .catch(error => {
-              console.log(error)
-              reject()
-            })
-          })
-        })
-      )
-    },
-    updateUser(context, payload){
-      axios.patch(context.getters.server + context.getters.api.users.update, context.getters.user)
-      .then((res) => {
-        console.log(`PATCH ${context.getters.api.users.update} ${res.data.user.nickname}`)
-        context.commit('setCurrentUser', { user: res.data.user })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    destroyUser(context, payload){
-      axios.delete(context.getters.server + context.getters.api.users.destroy)
-      .then((res) => {
-        console.log(`DELETE ${context.getters.api.users.destroy} ${res.data.user.nickname}`)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    tweet(context, payload){
-      axios.post(context.getters.server + context.getters.api.tweets.create, payload)
-      .then((res) => {
-        console.log(`POST ${context.getters.api.tweets.create} ${res.data.tweet.message}`)
-        context.commit('settweet', { tweet: res.data.tweet })
-        // if(/\s#.+/.test(res.data.tweet.message)) this.dispatch('createHashTags', { tweet: res.data.tweet })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    
-    getTweet(context, payload){
-      axios.get(context.getters.server + context.getters.api.tweets.show.user)
-      .then((res) => {
-        console.log('GET ' + context.getters.api.tweets.show.user + ' ' + res.data.tweet.message)
-        context.commit('settweet', { tweet: res.data.tweet })
-        this.dispatch('getReplies', { mode: { tweets: 'reply' } })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    async createReply(context, payload){
-      await axios.post(context.getters.server + context.getters.api.tweets.reply, payload)
-      .then((res) => {
-        console.log(`POST ${context.getters.api.tweets.reply} Reply:${res.data.reply_id} Replied:${res.data.replied_id}`)
-        // context.commit('cleartweet')
-        this.dispatch('getReplies', { mode: { tweets: 'reply' } })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    async getReplies(context, payload){
-      await axios.get(context.getters.server + context.getters.api.tweets.replies)
-      .then((res) => {
-        console.log('GET ' + context.getters.api.tweets.replies + ' ' + res.data.tweets[0].message)
-        context.commit('setTweetsMode', { mode: payload.mode })
-        context.commit('setTweets', { tweets: res.data.tweets })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    getTweets(context, payload){
-      context.commit('setUserId', { userId: payload.userId })
-      axios.get(context.getters.server + context.getters.api.tweets.index[payload.mode])
-      .then((res) => {
-        console.log(res)
-        console.log('GET ' + context.getters.api.tweets.index[payload.mode] + ' ' + res.data.tweets[0].message)
-        context.commit('setTweetsMode', { mode: payload.mode })
-        context.commit('setTweets', { tweets: res.data.tweets })
-        console.log(context.getters.tweets)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    getHashTagTweets(context, payload){
-      axios.get(context.getters.server + context.getters.api.tweets.index[payload.mode])
-      .then((res) => {
-        console.log(res)
-        console.log('GET ' + context.getters.api.tweets.index[payload.mode] + ' ' + res.data.tweets[0].message)
-        context.commit('setTweetsMode', { mode: payload.mode })
-        context.commit('setTweets', { tweets: res.data.tweets })
-        console.log(context.getters.tweets)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
-    destroytweet(context, payload){
-      context.commit('settweet', { tweet: payload.tweet })
-      axios.delete(context.getters.server + context.getters.api.tweets.destroy)
-      .then((res) => {
-        context.commit('cleartweet')
-        console.log(`DELETE ${context.getters.api.tweets.destroy} ${res.data.tweet.message}`)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    },
+    // getCurrentUser(context, payload){
+    //   axios.get(context.getters.server + context.getters.api.users.show.currentUser)
+    //   .then((res) => {
+    //     context.commit('setCurrentUser', { user: res.data.user })
+    //     console.log(`GET ${context.getters.api.users.show.currentUser} ${res.data.user.nickname}`)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // getUsers(context, payload){
+    //   axios.get(context.getters.server + context.getters.api.users.index)
+    //   .then((res) => {
+    //     console.log(`GET ${context.getters.api.users.index} ${res.data.users[0].nickname}`)
+    //     context.commit('setUsers', { users: res.data.user })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // async searchUsers(context, payload){
+    //   const res = await axios.get(context.getters.server + context.getters.api.users.search, { params: { q: { nickname_cont: context.getters.searchWord } }})
+    //   console.log(`GET ${location.pathname} ${res.data.users[0].nickname}`)
+    //   context.commit('setUsers', { users: res.data.users })
+    // },  
+    // getUser(context, payload){
+    //   console.log(context.state.tweets.user)
+    //   axios.get(context.getters.server + context.getters.api.users.show.user)
+    //   .then((res) => {
+    //     console.log(`GET ${context.getters.api.users.show.user} ${res.data.user.nickname}`)
+    //     context.commit('setUser', { user: res.data.user })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // follow(context, payload){
+    //   axios.post(context.getters.server + context.getters.api.relationships.follow + payload.api)
+    //   .then((res) => {
+    //     console.log(`POST ${context.getters.api.relationships.follow + payload.api} ${res.data.followed_id}`)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // unfollow(context, payload){
+    //   axios.delete(context.getters.server + context.getters.api.relationships.unfollow + payload.api)
+    //   .then((res) => {
+    //     console.log(`DELETE ${context.getters.api.relationships.unfollow + payload.api} ${res.data.followed_id}`)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // async getFollowings(context, payload){
+    //   await axios.get(context.getters.server + context.getters.api.relationships.followings)
+    //     .then((res) => {
+    //       console.log(`GET ${context.getters.api.users.followings} ${res.data.followings[0].nickname}`)
+    //       context.commit('setFollowings', { followings: res.data.followings })
+    //       this.dispatch('getFollowingstweets')
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+    // },
+    // async getFollowingstweets(context, payload){
+    //   await Promise.all(context.state.followings.map((following)=>{
+    //     return new Promise((resolve, reject) => {
+    //       axios.get(context.getters.server + `/users/${following.id}/tweets`)
+    //         .then((res) => {
+    //           console.log(`GET /users/${following.id}/tweets ${res.data.tweets[0]?.message}`)
+    //           context.commit('setTweetsMode', { mode: { tweets:  'followings' } })
+    //           context.commit('setTweets', { tweets: res.data.tweets })
+    //           resolve()
+    //         })
+    //         .catch(error => {
+    //           console.log(error)
+    //           reject()
+    //         })
+    //       })
+    //     })
+    //   )
+    // },
+    // updateUser(context, payload){
+    //   axios.patch(context.getters.server + context.getters.api.users.update, context.getters.user)
+    //   .then((res) => {
+    //     console.log(`PATCH ${context.getters.api.users.update} ${res.data.user.nickname}`)
+    //     context.commit('setCurrentUser', { user: res.data.user })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // destroyUser(context, payload){
+    //   axios.delete(context.getters.server + context.getters.api.users.destroy)
+    //   .then((res) => {
+    //     console.log(`DELETE ${context.getters.api.users.destroy} ${res.data.user.nickname}`)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // getTweet(context, payload){
+    //   axios.get(context.getters.server + context.getters.api.tweets.show.user)
+    //   .then((res) => {
+    //     console.log('GET ' + context.getters.api.tweets.show.user + ' ' + res.data.tweet.message)
+    //     context.commit('setTweet', { tweet: res.data.tweet })
+    //     this.dispatch('getReplies', { mode: { tweets: 'reply' } })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // async createReply(context, payload){
+    //   await axios.post(context.getters.server + context.getters.api.tweets.reply, payload)
+    //   .then((res) => {
+    //     console.log(`POST ${context.getters.api.tweets.reply} Reply:${res.data.reply_id} Replied:${res.data.replied_id}`)
+    //     // context.commit('cleartweet')
+    //     this.dispatch('getReplies', { mode: { tweets: 'reply' } })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // async getReplies(context, payload){
+    //   await axios.get(context.getters.server + context.getters.api.tweets.replies)
+    //   .then((res) => {
+    //     console.log('GET ' + context.getters.api.tweets.replies + ' ' + res.data.tweets[0].message)
+    //     context.commit('setTweetsMode', { mode: payload.mode })
+    //     context.commit('setTweets', { tweets: res.data.tweets })
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // getTweets(context, payload){
+    //   context.commit('setUserId', { userId: payload.userId })
+    //   axios.get(context.getters.server + context.getters.api.tweets.index[payload.mode])
+    //   .then((res) => {
+    //     console.log(res)
+    //     console.log('GET ' + context.getters.api.tweets.index[payload.mode] + ' ' + res.data.tweets[0].message)
+    //     context.commit('setTweetsMode', { mode: payload.mode })
+    //     context.commit('setTweets', { tweets: res.data.tweets })
+    //     console.log(context.getters.tweets)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // getHashTagTweets(context, payload){
+    //   axios.get(context.getters.server + context.getters.api.tweets.index[payload.mode])
+    //   .then((res) => {
+    //     console.log(res)
+    //     console.log('GET ' + context.getters.api.tweets.index[payload.mode] + ' ' + res.data.tweets[0].message)
+    //     context.commit('setTweetsMode', { mode: payload.mode })
+    //     context.commit('setTweets', { tweets: res.data.tweets })
+    //     console.log(context.getters.tweets)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
+    // destroytweet(context, payload){
+    //   context.commit('setTweet', { tweet: payload.tweet })
+    //   axios.delete(context.getters.server + context.getters.api.tweets.destroy)
+    //   .then((res) => {
+    //     context.commit('cleartweet')
+    //     console.log(`DELETE ${context.getters.api.tweets.destroy} ${res.data.tweet.message}`)
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
+    // },
     async getData(context, payload){
       const res = await axios.get(context.getters.server + context.getters.api.search.data, context.getters.searchWord)
       // console.log(`GET ${this.getters.api.searches.data} ${res.data.users} ${res.data.tweets}`)

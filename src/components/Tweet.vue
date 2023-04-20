@@ -33,7 +33,7 @@ export default {
     },
   },
   created(){
-    this.$store.commit('settweet', { tweet: this.tweet })
+    this.$store.commit('setTweet', { tweet: this.tweet })
   },
 }
 </script>
