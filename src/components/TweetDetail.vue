@@ -1,12 +1,12 @@
 <script>
 // import { ssrContextKey } from 'vue'
-// import tweetModal from './tweetModal.vue'
-import tweetList from './tweetList.vue'
+// import TweetModal from './TweetModal.vue'
+import Tweets from './Tweets.vue'
 
 export default {
   name: "tweetDetail",
   components: { 
-    tweetList,
+    Tweets,
     // tweetModal,
   },
   data() {
@@ -62,5 +62,5 @@ export default {
   {{ tweet.message }}
   <input type="text" v-model="message">
   <button @click="createReply">返信</button>
-  <tweetList />
+  <Tweets />
 </template>

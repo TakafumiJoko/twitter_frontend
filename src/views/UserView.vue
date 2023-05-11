@@ -2,7 +2,7 @@
 import Profile from "../components/Profile.vue"
 import ProfileForm from "../components/ProfileForm.vue"
 import SearchForm from "../components/SearchForm.vue"
-import tweetList from "../components/tweetList.vue"
+import Tweets from "../components/Tweets.vue"
 
 export default {
   name: "UserView",
@@ -10,7 +10,7 @@ export default {
     Profile,
     ProfileForm,
     SearchForm,
-    tweetList,
+    Tweets,
   },
   data() {
     return {
@@ -37,7 +37,7 @@ export default {
 
 <template>
   <Profile/>
-  <tweetList/>  
+  <Tweets/>  
   <ProfileForm v-if="userId==currentUser.id"/>
   <SearchForm></SearchForm>
 </template>

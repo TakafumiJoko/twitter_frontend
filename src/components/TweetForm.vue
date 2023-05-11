@@ -3,7 +3,7 @@ import { TWEET_MAX_LENGTH } from '../const'
 import { postTweet } from '../api'
 
 export default {
-  name: "tweetForm",
+  name: "TweetForm",
   data() {
     return {
       tweet: {

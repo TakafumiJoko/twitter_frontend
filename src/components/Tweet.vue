@@ -1,11 +1,10 @@
 <script>
 import { ssrContextKey } from 'vue'
-import tweetModal from './tweetModal.vue'
+import TweetModal from './TweetModal.vue'
 
 export default {
-  name: "tweet",
   components: { 
-    tweetModal,
+    TweetModal,
   },
   data() {
     return {
@@ -28,7 +27,7 @@ export default {
     showtweetModal(){
       this.isVisible = true
     },
-    closetweetModal(){
+    closeTweetModal(){
       this.isVisible = false
     },
   },
@@ -48,6 +47,6 @@ export default {
     {{ tweetUser.nickname }}
     <span @click="showtweetModal">・・・</span>
     {{ tweet.message }}
-    <tweetModal :tweet="tweet" :isVisible="isVisible" @close="closetweetModal" />
+    <TweetModal :tweet="tweet" :isVisible="isVisible" @close="closeTweetModal" />
   </div>
 </template>

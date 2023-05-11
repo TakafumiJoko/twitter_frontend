@@ -1,6 +1,6 @@
 <script>
-import tweetForm from "../components/TweetForm.vue"
-import tweetList from "../components/tweetList.vue"
+import TweetForm from "../components/TweetForm.vue"
+import Tweets from "../components/Tweets.vue"
 import SearchForm from "../components/SearchForm.vue"
 
 export default {
@@ -12,8 +12,8 @@ export default {
   methods: {
   },
   components: {
-    tweetForm,
-    tweetList,
+    TweetForm,
+    Tweets,
     SearchForm,
   },
   created(){
@@ -24,7 +24,7 @@ export default {
 </script>
 
 <template>
-  <tweetForm/>
-  <tweetList />  
+  <TweetForm/>
+  <Tweets />  
   <SearchForm></SearchForm>
 </template>
