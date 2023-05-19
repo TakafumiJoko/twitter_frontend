@@ -1,7 +1,7 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import Account from './components/Account.vue'
-import { cookieUserId } from './modules/session'
+import { username, getCurrentUser } from './api'
 
 export default {
   name: "App",
@@ -10,45 +10,70 @@ export default {
   },
   data() {
     return {
+      username: username,
     }
   },
   computed: {
     currentUser(){
       return this.$store.getters.currentUser
     },
-    cookieUserId(){
-      return this.$store.getters.cookieUserId
-    },
     isLoggedIn(){
       return this.$store.getters.isLoggedIn
-    },
+    }
   },
-  created(){
-    this.$store.commit('setCookieUserId', { userId: cookieUserId() })
-    if(this.isLoggedIn) this.$store.dispatch('getCurrentUser')
-    this.$store.dispatch('getUsers')
+  methods: {   
+    
+  },
+  async created(){
+    if(this.username !== undefined){
+      this.cookie = username
+    }
+    if(!this.currentUser){
+      const res = await getCurrentUser()
+      console.log(res.data.user)
+      this.$store.commit('setCurrentUser', { user: res.data.user })
+    }
+    // this.$store.dispatch('getUsers')
   },
 }
 </script>
 
 <template>
-  <header>
-    <nav v-if="!isLoggedIn">
-      <RouterLink :to="{ name: 'beforeLogin' }">ログイン前</RouterLink>
-    </nav>
-    <nav v-else>
-      <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-      <RouterLink :to="{ name: 'search' }">Search</RouterLink>
-      <RouterLink :to="{ name: 'user', params: { id: cookieUserId } }">User</RouterLink>
-      <RouterLink :to="{ name: 'setting' }">Setting</RouterLink>
-      <Account />
-    </nav>
-  </header>
-  <main>
-    <RouterView></RouterView>
-  </main>
+  <div class="container">
+    <div class="left">
+      <ul v-if="isLoggedIn">
+        <li><RouterLink :to="{ name: 'home' }">Home</RouterLink></li>
+        <li><RouterLink :to="{ name: 'search' }">Search</RouterLink></li>
+        <li><RouterLink :to="{ name: 'setting' }">Setting</RouterLink></li>
+        <li><RouterLink :to="{ name: 'user', params: { username: username } }">User</RouterLink></li>
+        <li><Account></Account></li>
+      </ul>
+    </div>
+    <main class="center">
+      <RouterView></RouterView>
+    </main>
+    <div class="right">
+      <div v-if="isLoggedIn">
+
+      </div>
+      <div v-else>
+        
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-
+.container {
+  display: flex;
+}
+.left {
+  width: 15%;
+}
+.center {
+  width: 60%;
+}
+.right {
+  width: 25%;
+}
 </style>

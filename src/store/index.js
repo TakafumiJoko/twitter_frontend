@@ -1,131 +1,45 @@
 import Vuex from 'vuex'
 import { createStore } from 'vuex-extensions'
+import { isLoggedIn } from '../modules/cookie'
 
 var store = createStore(Vuex.Store, {
   state() {
     return {
-      currentUser: undefined,
+      baseURL: 'http://127.0.0.1:3000',
+      isLoggedIn: isLoggedIn(),
+      currentUser: {},
       passwordConfirmation: undefined,
       user: {},
-      userId: 0,
+      username: undefined,
       users: {},
-      tweet: {},
-      tweetId: 0,
-      tweetId: [],
-      tweets: {
-        currentUser: [],
-        user: [],
-        searchResult: [],
-        followings: [],
-        reply: [], 
-      },
+      tweets: [],
       followings: [],
       followers: [],
       searchResulttweets: undefined,
       mode: {
-        tweets: '',
         page: 'introduction',
       },
       searchWord: undefined,
       categories: [],
       category: {},
       hashTags: {},
-      tweetId: 0,
       // category: undefined,
       password: undefined,
       destroyUserDisabled: true,
     }
   },
-  getters: {
-    cookieUserId(state){
-      return state.cookieUserId
-    },
-    isLoggedIn(state){
-      return state.cookieUserId ? true : false 
-    },
-    mode(state){
-      return state.mode
-    },
-    server(state){
-      return state.server
-    },
-    userId(state){
-      return state.userId
-    },
-    tweetId(state){
-      return state.tweetId
-    },
-    user(state){
-      return state.user
-    },
-    user(state){
-      return state.user
-    },
-    currentUser(state){
-      return state.currentUser
-    },
-    passwordConfirmation(state){
-      return state.passwordConfirmation
-    },
-    signupDisabled(state){
-      return !(state.user.password != null && state.user.password == state.passwordConfirmation)
-    },
-    contact(state){
-      return state.contact
-    },
-    users(state){
-      return state.users
-    },
-    tweets(state){
-      return state.tweets[state.mode.tweets]
-    },
-    tweet(state){
-      return state.tweet
-      // return state.tweets[state.mode.tweets].find((t)=>{ return t.id === state.tweetId })
-    },
-    following(state){
-      return state.followings.find((f)=>{ return f.id === state.tweet.user_id })
-    },
-    tweetUser(state){
-      return state.users.find((u)=>{ return u.id === state.tweet.user_id })
-    },
-    searchResulttweets(state){
-      return state.searchResulttweets
-    },
-    searchWord(state){
-      return state.searchWord
-    },
-    // category(state){
-    //   return state.category
-    // },
-    categories(state){
-      return state.categories
-    },
-    category(state){
-      return state.category
-    },
-    hashTags(state){
-      return state.hashTags
-    },
-    pageMode(state){
-      return state.mode.page
-    },
-    password(state){
-      return state.password
-    },
-    destroyUserDisabled(state){
-      return state.destroyUserDisabled
-    },
-  },
   mutations: {
-    setCookieUserId(state, payload){
-      state.cookieUserId = payload.userId
+    setIsLoggedIn(state, payload){
+      state.isLoggedIn = payload.isLoggedIn
     },
     setCurrentUser(state, payload){
       state.currentUser = payload.user
     },
     setUsers(state, payload){
       state.users = payload.setUser
+    },
+    setUser(state,payload){
+      state.user = payload.user
     },
     setNickname(state, payload){
       state.user.nickname = payload.value
@@ -163,11 +77,8 @@ var store = createStore(Vuex.Store, {
     setUser(state, payload){
       state.user = payload.user
     },
-    setUserId(state, payload){
-      state.userId = payload.userId
-    },
-    setUsers(state,payload){
-      state.users = payload.users
+    setUsername(state, payload){
+      state.username = payload.username
     },
     clearuser(state){
       state.user = {}
@@ -178,23 +89,11 @@ var store = createStore(Vuex.Store, {
     setSearchResultUser(state){
       state.searchResultUser = payload.user
     },
-    setTweet(state,payload){
-      state.tweet = payload.tweet
-    },
-    setTweetId(state, payload){
-      state.tweetId = payload.tweetId
-    },
-    setTweetId(state, payload){
-      state.tweetId = payload.tweetId
-    },
     cleartweet(state){
       state.tweet = {}
     },
-    setTweetsMode(state, payload){
-      state.mode.tweets = payload.mode.tweets
-    },
     setTweets(state, payload){
-      state.tweets[state.mode.tweets] = payload.tweets
+      state.tweets = payload.tweets
     },
     setSearchResulttweets(state, payload){
       state.searchResulttweets = payload.tweets
@@ -233,17 +132,85 @@ var store = createStore(Vuex.Store, {
       state.tweetId = payload.tweetId
     },
   },
-  actions: {
-    // getCurrentUser(context, payload){
-    //   axios.get(context.getters.server + context.getters.api.users.show.currentUser)
-    //   .then((res) => {
-    //     context.commit('setCurrentUser', { user: res.data.user })
-    //     console.log(`GET ${context.getters.api.users.show.currentUser} ${res.data.user.nickname}`)
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
+  getters: {
+    isLoggedIn(state){
+      return state.isLoggedIn
+    },
+    mode(state){
+      return state.mode
+    },
+    server(state){
+      return state.server
+    },
+    username(state){
+      return state.username
+    },
+    tweetId(state){
+      return state.tweetId
+    },
+    user(state){
+      return state.user
+    },
+    user(state){
+      return state.user
+    },
+    currentUser(state){
+      return state.currentUser
+    },
+    passwordConfirmation(state){
+      return state.passwordConfirmation
+    },
+    signupDisabled(state){
+      return !(state.user.password != null && state.user.password == state.passwordConfirmation)
+    },
+    contact(state){
+      return state.contact
+    },
+    users(state){
+      return state.users
+    },
+    tweets(state){
+      return state.tweets
+    },
+    tweet(state){
+      return state.tweet
+      // return state.tweets[state.mode.tweets].find((t)=>{ return t.id === state.tweetId })
+    },
+    following(state){
+      return state.followings.find((f)=>{ return f.id === state.tweet.username })
+    },
+    tweetUser(state){
+      return state.users.find((u)=>{ return u.id === state.tweet.username })
+    },
+    searchResulttweets(state){
+      return state.searchResulttweets
+    },
+    searchWord(state){
+      return state.searchWord
+    },
+    // category(state){
+    //   return state.category
     // },
+    categories(state){
+      return state.categories
+    },
+    category(state){
+      return state.category
+    },
+    hashTags(state){
+      return state.hashTags
+    },
+    pageMode(state){
+      return state.mode.page
+    },
+    password(state){
+      return state.password
+    },
+    destroyUserDisabled(state){
+      return state.destroyUserDisabled
+    },
+  },
+  actions: {
     // getUsers(context, payload){
     //   axios.get(context.getters.server + context.getters.api.users.index)
     //   .then((res) => {
@@ -370,7 +337,7 @@ var store = createStore(Vuex.Store, {
     //   })
     // },
     // getTweets(context, payload){
-    //   context.commit('setUserId', { userId: payload.userId })
+    //   context.commit('setUserId', { username: payload.username })
     //   axios.get(context.getters.server + context.getters.api.tweets.index[payload.mode])
     //   .then((res) => {
     //     console.log(res)

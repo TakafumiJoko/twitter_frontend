@@ -7,17 +7,14 @@
       }
     },
     methods: {
-    },
-    computed: {
-      currentUser(){
-        return this.$store.getters.currentUser
-      }
-    },
+    },  
+    props: ['user'],
   }
 </script>
 
 <template>
-  <h2>{{ currentUser.nickname }}</h2>
-  <h3>{{ currentUser.name }}</h3>
-  <h3>{{ currentUser.birthday }}</h3>
+  <img src="a">
+  <h2>{{ user.nickname }}</h2>
+  <h3>{{ user.name }}</h3>
+  <h3>{{ user.birthday }}</h3>
 </template>

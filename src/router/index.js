@@ -1,5 +1,3 @@
-import { nextTick } from 'vue'
-import VueCookies from 'vue-cookies/vue-cookies'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
@@ -8,7 +6,7 @@ import SearchResultView from '../views/SearchResultView.vue'
 import SettingView from '../views/SettingView.vue'
 import SettingAccountView from '../views/SettingAccountView.vue'
 import SettingAccountDeactiveView from '../views/SettingAccountDeactiveView.vue'
-import { isLoggedIn } from '../modules/session'
+import { isLoggedIn } from '../modules/cookie'
 import BeforeLoginView from '../views/BeforeLoginView.vue'
 import SignupModalView from '../views/SignupView.vue'
 import LoginModalView from '../views/LoginView.vue'
@@ -41,7 +39,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/users/:id',
+      path: '/:username',
       name: 'user',
       component: UserView,
       meta: { requiresAuth: true },
@@ -65,7 +63,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/users/:user_id/tweets/:id',
+      path: '/users/:username/tweets/:id',
       name: 'tweetDetail',
       component: TweetDetail,
       meta: { requiresAuth: true },
@@ -85,15 +83,15 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  if(to.meta.requiresAuth && !isLoggedIn()){
-    next({ name: 'beforeLogin' })
-  } else if(!to.meta.requiresAuth && isLoggedIn()){
-    next({ name: 'home' })
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if(to.meta.requiresAuth && !isLoggedIn()){
+//     next({ name: 'beforeLogin' })
+//   } else if(!to.meta.requiresAuth && isLoggedIn()){
+//     next({ name: 'home' })
+//   } else {
+//     next()
+//   }
+// })
 
 export default router
 

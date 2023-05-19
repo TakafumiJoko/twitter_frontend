@@ -15,6 +15,13 @@ export default defineConfig({
     outDir:"./build"
   },
   server:{
-    host:'0.0.0.0'
+    host:'0.0.0.0',
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "@/assets/variables.scss";'
+      }
+    }
   }
 })

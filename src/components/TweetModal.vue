@@ -1,6 +1,7 @@
 <template to="body">
   <div class="modal" id="sample-modal" v-show="isVisible" @click="close"></div>
   <div class="modal-content" v-show="isVisible">
+    <slot></slot>
     <div>このツイートに興味がない</div>
     <div @click="follow">{{ tweetUser.name }}さんをフォロー</div>
     <div @click="unfollow">{{ tweetUser.name }}さんのフォローを解除</div>
@@ -47,7 +48,7 @@ export default {
 </script>
 
 <style scoped lang="sass">
-  .modal
+  .modal 
     position: fixed
     top: 0
     right: 0

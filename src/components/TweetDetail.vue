@@ -41,7 +41,7 @@ export default {
     },
   },
   created(){
-    this.$store.commit('setUserId', { userId: this.$route.params.user_id })
+    this.$store.commit('setUserId', { username: this.$route.params.username })
     this.$store.commit('setTweetId', { tweetId: this.$route.params.id })
     this.$store.dispatch('getTweet')
   },
@@ -49,11 +49,11 @@ export default {
 </script>
 
 <template>
-  <!-- <div v-if="tweet.user_id === currentUser.id" @click="$router.push({ name: 'tweetDetail', params: { user_id: currentUser.id, id: tweet.id } })">
+  <!-- <div v-if="tweet.username === currentUser.id" @click="$router.push({ name: 'tweetDetail', params: { username: currentUser.id, id: tweet.id } })">
     {{ tweet.message }}
     <button @click="destroytweet">削除</button>
   </div>
-  <div v-else @click="$router.push({ name: 'tweetDetailView', params: { user_id: tweetUser.id, id: tweet.id } })">
+  <div v-else @click="$router.push({ name: 'tweetDetailView', params: { username: tweetUser.id, id: tweet.id } })">
     {{ tweetUser.nickname }}
     <span @click="showtweetModal">・・・</span>
     {{ tweet.message }}

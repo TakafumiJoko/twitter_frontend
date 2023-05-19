@@ -1,6 +1,7 @@
 <script>
-  import { logIn, cookieUserId } from "../modules/session.js"
-  import { nicknameRules, isUnique } from "../modules/validation"
+  import { isLoggedIn, setCookie } from "../modules/cookie.js"
+  import { nicknameRules } from "../modules/validation"
+  import { signup } from "../api"
 
   export default {
     name: "SignupView",
@@ -34,23 +35,16 @@
       },
     },
     methods: {
-      signup(){
-        axios.post(this.server + this.api.users.create, this.user)
-        .then((res) => {
-          console.log(`POST ${this.api.users.create} ${res.data.user.nickname}`)
-          this.$store.commit('setCurrentUser', { user: res.data.user })
-          logIn(res.data.user)
-          this.$store.commit('setCookieUserId', { userId: cookieUserId() })
-          this.$router.push({ name: 'home' })
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      async signup(){
+        const res = await signup({ user: this.user })
+        this.$store.commit('setCurrentUser', { user: res.data.user })
+        this.$store.commit('setUser', { user: res.data.user })
+        var expires = (new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)).toUTCString()
+        setCookie('username', res.data.user.name, { expires: expires })
+        this.$store.commit('setIsLoggedIn', { isLoggedIn: isLoggedIn() })
+        this.$router.push({ name: 'home' }) 
       },
     },
-    mounted(){
-      // isUnique()
-    }
   }
 </script>
 

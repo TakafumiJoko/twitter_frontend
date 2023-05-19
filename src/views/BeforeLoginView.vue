@@ -17,9 +17,10 @@ export default {
   <router-link :to="{ name: 'signup' }">サインアップする</router-link>
   <router-link :to="{ name: 'login' }">ログインする</router-link>
   <Modal v-if="/\/(signup|login)/.test($route.path)">
-    <slot id="main">
+    <template v-slot>
+      <router-link :to="{ name: 'beforeLogin' }">✖️</router-link><br>
       <router-view></router-view>
-    </slot>
+    </template>
   </Modal>
 </template>
 

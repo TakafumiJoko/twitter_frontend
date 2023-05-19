@@ -1,3 +1,7 @@
+<template>
+  <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" /> 
+</template>
+
 <script>
 import Tweet from './Tweet.vue'
 export default {
@@ -9,19 +13,11 @@ export default {
     }
   },
   computed: {
-    tweets() {
-      return this.$store.getters.tweets
-    },
+   
   },
   methods: {
   
   },
-  created(){
-    console.log(this.tweets)
-  }
+  props: ['tweets'],
 }
 </script>
-
-<template>
-  <Tweet v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" /> 
-</template>

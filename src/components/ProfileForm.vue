@@ -1,8 +1,15 @@
 <script>
+import { updateProfile } from '../api';
+
   export default {
     name: "ProfileForm",
     data() {
       return {
+        user: {
+          nickname: '',
+          avatar: undefined,
+        },
+        avatarURL: '',
       }
     },
     computed: {
@@ -11,15 +18,19 @@
       }
     },
     methods: {
-      updateUser(){
-        this.$store.dispatch('updateUser')
+      updateProfile(){
+        updateProfile({ user: this.user })
       },
+      selectUserImage(e){
+        this.user.avatar = e.target.files[0]
+        this.avatarURL = URL.createObjectURL(this.user.avatar)
+      }
     },
   }
 </script>
 
 <template>
-  <VForm @submit.prevent="updateUser">
+  <!-- <VForm @submit.prevent="updateUser">
     <VTextField 
       label="名前" 
       v-model="currentUser.nickname">
@@ -43,5 +54,9 @@
     <VBtn @click="updateUser">
       保存
     </VBtn>
-  </VForm>
+  </VForm> -->
+  <input type="text" v-model="user.nickname">
+  <img :src="avatarURL">
+  <input type="file" @change="selectUserImage">
+  <button @click="updateProfile">保存</button>
 </template>

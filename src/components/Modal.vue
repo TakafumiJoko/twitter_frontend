@@ -8,8 +8,9 @@ export default {
   <Teleport to="body">
     <div id="overlay"></div>
     <div class="modal">
-      <router-link :to="{ name: 'beforeLogin' }">✖️</router-link><br>
-      <slot id="main"></slot>
+      <slot name="header"></slot>
+      <slot></slot>
+      <slot name="footer"></slot>
     </div>
   </Teleport>
 </template>
@@ -29,11 +30,24 @@ export default {
   position: fixed;
   z-index: 3;
   inset: 0;
-  margin: auto;
-  width: 80%;
-  height: 80%;
+  margin: 0 auto;
+  width: 600px;
+  height: 90%;
+  margin-top: 50px;
   background-color: #fff;
   border-radius: 5%;
-  padding: 50px;
 }
+
+@media screen and (max-width: 699px) {
+  .modal {
+    width: 450px;
+  }
+}
+
+@media screen and (max-width: 549px) {
+    .modal {
+      width: 300px;
+    }
+}
+
 </style>

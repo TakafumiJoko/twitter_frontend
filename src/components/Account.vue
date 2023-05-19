@@ -1,10 +1,10 @@
 <script>
-import { logOut } from '../modules/session'
+import { removeCookie } from '../modules/cookie'
 
   export default {
     methods: {
       logout(){
-        logOut()
+        removeCookie()
         this.$store.reset()
         this.$router.push({name: 'beforeLogin'})
       },

@@ -3,6 +3,8 @@ import Profile from "../components/Profile.vue"
 import ProfileForm from "../components/ProfileForm.vue"
 import SearchForm from "../components/SearchForm.vue"
 import Tweets from "../components/Tweets.vue"
+import { getUser, getTweets } from '../api'
+import store from "../store"
 
 export default {
   name: "UserView",
@@ -14,23 +16,29 @@ export default {
   },
   data() {
     return {
+     
     }
   },
   computed: {
-    currentUser(){
-      return this.$store.getters.currentUser
-    },
-    userId(){
-      return this.$store.getters.userId
-    }, 
+    tweets(){
+      return this.$store.getters.tweets
+    }
   },
   methods: {
- 
+    async getUser(){
+      const res = await getUser(this.$route.params.username)
+      console.log(`getUser:${res ? res.data.user.nickname : 'nothing'}`)
+      this.$store.commit('setUser', { user: res.data.user })
+    },
+    async getTweets(){
+      const res = await getTweets(this.$route.params.username)
+      console.log(`getTweets:${res ? res.data.tweets[0].message : 'nothing'}`)
+      this.$store.commit('setTweets', { tweets: res.data.tweets })
+    }
   },
   created(){
-    this.$store.commit('setUserId', { userId: this.$route.params.id })
-    console.log(this.userId)
-    this.$store.dispatch('getUser').then(this.$store.dispatch('getTweets', { userId: this.userId,  mode: { tweets: 'user' } }))
+    this.getUser()
+    this.getTweets()
   },
 }
 </script>
@@ -40,4 +48,9 @@ export default {
   <Tweets/>  
   <ProfileForm v-if="userId==currentUser.id"/>
   <SearchForm></SearchForm>
+  <!-- <Profile/> -->
+  <Tweets v-if="tweets" />  
+  <!-- <ProfileForm v-if="username==currentUser.id"/> -->
+  <!-- <ProfileForm></ProfileForm> -->
+  <!-- <SearchForm></SearchForm> -->
 </template>

@@ -1,5 +1,5 @@
 <script>
-import { logOut } from "../modules/session.js"
+import { removeCookie } from "../modules/cookie.js"
 export default {
   name: "SettingAccountDeactiveView",
   data(){
@@ -28,7 +28,7 @@ export default {
     },
     destroyUser(){
       this.$store.dispatch('destroyUser')
-      logOut()
+      removeCookie()
       this.$router.push({ name: 'beforeLogin' })
     },
     judgePassword(password){
