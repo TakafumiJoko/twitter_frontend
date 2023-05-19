@@ -6,9 +6,9 @@ var store = createStore(Vuex.Store, {
   state() {
     return {
       baseURL: 'http://127.0.0.1:3000',
-      isLoggedIn: isLoggedIn(),
+      isLoggedIn: undefined,
       currentUser: {},
-      passwordConfirmation: undefined,
+      passwordConfirmation: false,
       user: {},
       username: undefined,
       users: {},

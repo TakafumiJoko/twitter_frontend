@@ -84,9 +84,9 @@ const router = createRouter({
 })
 
 // router.beforeEach((to, from, next) => {
-//   if(to.meta.requiresAuth && !isLoggedIn()){
+//   if(to.meta.requiresAuth && !isLoggedIn){
 //     next({ name: 'beforeLogin' })
-//   } else if(!to.meta.requiresAuth && isLoggedIn()){
+//   } else if(!to.meta.requiresAuth && isLoggedIn){
 //     next({ name: 'home' })
 //   } else {
 //     next()

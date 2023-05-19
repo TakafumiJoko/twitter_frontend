@@ -18,6 +18,7 @@
           passwordConfirmation: '',
         },
         contact: 'phoneNumber',
+        test: this.test,
       }
     },
     computed: {
@@ -33,16 +34,19 @@
       nicknameRules(){
         return nicknameRules
       },
+      isLoggedIn(){
+        return this.$store.getters.isLoggedIn
+      }
     },
     methods: {
       async signup(){
         const res = await signup({ user: this.user })
         this.$store.commit('setCurrentUser', { user: res.data.user })
         this.$store.commit('setUser', { user: res.data.user })
+        this.$store.commit('setIsLoggedIn', { isLoggedIn: isLoggedIn })
         var expires = (new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)).toUTCString()
         setCookie('username', res.data.user.name, { expires: expires })
-        this.$store.commit('setIsLoggedIn', { isLoggedIn: isLoggedIn() })
-        this.$router.push({ name: 'home' }) 
+        this.$router.push({ name: 'home' })
       },
     },
   }
@@ -80,7 +84,7 @@
       type="password">
     </VTextField>
     <VBtn @click="signup" :disabled="signupDisabled">
-      次へ
+      サインアップ
     </VBtn>
   </VForm>
 </template>

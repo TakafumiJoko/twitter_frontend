@@ -17,8 +17,6 @@ const removeCookie = function removeCookie(){
   document.cookie = document.cookie.split(';')[0] + '; max-age=0'
 }
 
-const isLoggedIn = function isLoggedIn(){
-  return getCookie() ? true : false
-}
+const isLoggedIn = getCookie() ? true : false
 
 export { setCookie, getCookie, removeCookie, isLoggedIn } 

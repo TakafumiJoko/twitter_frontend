@@ -44,13 +44,8 @@ export default {
 </script>
 
 <template>
-  <Profile/>
-  <Tweets/>  
-  <ProfileForm v-if="userId==currentUser.id"/>
+  <Profile></Profile>
+  <ProfileForm/>
   <SearchForm></SearchForm>
-  <!-- <Profile/> -->
   <Tweets v-if="tweets" />  
-  <!-- <ProfileForm v-if="username==currentUser.id"/> -->
-  <!-- <ProfileForm></ProfileForm> -->
-  <!-- <SearchForm></SearchForm> -->
 </template>

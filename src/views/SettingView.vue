@@ -18,9 +18,9 @@ export default {
 </script>
 
 <template>
-      <nav>
-        <RouterLink :to="{ name: 'settingAccount' }">アカウント</RouterLink>
-      </nav>
+  <nav>
+    <RouterLink :to="{ name: 'settingAccount' }">アカウント</RouterLink>
+  </nav>
 </template>
 
 <style scoped>

@@ -1,43 +1,3 @@
-<script>
-import { RouterLink, RouterView } from 'vue-router'
-import Account from './components/Account.vue'
-import { username, getCurrentUser } from './api'
-
-export default {
-  name: "App",
-  components: {
-    Account,
-  },
-  data() {
-    return {
-      username: username,
-    }
-  },
-  computed: {
-    currentUser(){
-      return this.$store.getters.currentUser
-    },
-    isLoggedIn(){
-      return this.$store.getters.isLoggedIn
-    }
-  },
-  methods: {   
-    
-  },
-  async created(){
-    if(this.username !== undefined){
-      this.cookie = username
-    }
-    if(!this.currentUser){
-      const res = await getCurrentUser()
-      console.log(res.data.user)
-      this.$store.commit('setCurrentUser', { user: res.data.user })
-    }
-    // this.$store.dispatch('getUsers')
-  },
-}
-</script>
-
 <template>
   <div class="container">
     <div class="left">
@@ -45,7 +5,7 @@ export default {
         <li><RouterLink :to="{ name: 'home' }">Home</RouterLink></li>
         <li><RouterLink :to="{ name: 'search' }">Search</RouterLink></li>
         <li><RouterLink :to="{ name: 'setting' }">Setting</RouterLink></li>
-        <li><RouterLink :to="{ name: 'user', params: { username: username } }">User</RouterLink></li>
+        <li><RouterLink :to="{ name: 'user', params: { username: currentUser.name } }">User</RouterLink></li>
         <li><Account></Account></li>
       </ul>
     </div>
@@ -57,11 +17,48 @@ export default {
 
       </div>
       <div v-else>
-        
+
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import { RouterLink, RouterView } from 'vue-router'
+import Account from './components/Account.vue'
+import { getCurrentUser } from './api'
+import { isLoggedIn } from './modules/cookie'
+
+export default {
+  name: "App",
+  components: {
+    Account,
+  },
+  data() {
+    return {
+    }
+  },
+  computed: {
+    currentUser(){
+      return this.$store.getters.currentUser
+    },
+    isLoggedIn(){
+      return this.$store.getters.isLoggedIn
+    },
+  },
+  methods: {
+   
+  },
+  async created(){
+    this.$store.commit('setIsLoggedIn', { isLoggedIn: isLoggedIn })
+    if(this.isLoggedIn){
+      const res = await getCurrentUser()
+      console.log(res.data.user)
+      this.$store.commit('setCurrentUser', { user: res.data.user })
+    }
+  },
+}
+</script>
 
 <style scoped>
 .container {

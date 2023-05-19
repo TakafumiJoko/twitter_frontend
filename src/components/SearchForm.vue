@@ -1,3 +1,18 @@
+<template>
+  <VForm @submit.prevent="getData">
+    <VTextField
+      @change="$store.commit('setSearchWord', { searchWord: $event.target.value })"
+    ></VTextField>
+    <VBtn @click="getData">検索</VBtn>
+  </VForm>
+  <div v-for="user in users">
+    <div @click="getUsertweets(user)">{{ user.nickname }}</div>
+  </div>
+  <div v-if="searchResulttweets">
+    <div @click="getSearchResulttweets">{{ key + " " + searchResulttweets.length }}</div>
+  </div>
+</template>
+
 <script>
   export default {
     name: "SearchForm",
@@ -18,6 +33,7 @@
         // this.$store.dispatch('getData', { mode: { tweets: 'searchResult' } })
       },
       getUsertweets(user){
+        this.$emit('setUser', user)
         this.$store.dispatch('getTweets', { username: user.id, mode: 'user' })
         this.$router.push({ name: 'user', params: { id: user.id } })
       },
@@ -25,20 +41,6 @@
         this.$store.dispatch('getTweets', { user: 'user', mode: { tweets: 'searchResult' } })
       },
     },
+    emits: ['set-user'],
   }
 </script>
-
-<template>
-  <VForm @submit.prevent="getData">
-    <VTextField
-      @change="$store.commit('setSearchWord', { searchWord: $event.target.value })"
-    ></VTextField>
-    <VBtn @click="getData">検索</VBtn>
-  </VForm>
-  <div v-for="user in users">
-    <div @click="getUsertweets(user)">{{ user.nickname }}</div>
-  </div>
-  <div v-if="searchResulttweets">
-    <div @click="getSearchResulttweets">{{ key + " " + searchResulttweets.length }}</div>
-  </div>
-</template>

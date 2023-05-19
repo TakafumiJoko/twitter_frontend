@@ -5,7 +5,7 @@
     name: "LoginView",
     data() {
       return {
-        cookie: {
+        user: {
           phoneNumber: '',
           email: '',
           password: '',
@@ -44,20 +44,20 @@
 <template>
   <VForm @submit.prevent="login">
     <div v-if="contact == 'phoneNumber'">
-      <VTextField label="電話番号" v-model="cookie.phoneNumber" />
+      <VTextField label="電話番号" v-model="user.phoneNumber" />
       <span @click="contact='email'">代わりにメールアドレスを登録する</span>
     </div>
     <div v-if="contact == 'email'">
-      <VTextField label="メールアドレス" v-model="cookie.email" />
+      <VTextField label="メールアドレス" v-model="user.email" />
       <span @click="contact='phoneNumber'">代わりに電話番号を登録する</span>
     </div>
     <VTextField
       label="パスワード"
-      v-model="cookie.password"
+      v-model="user.password"
       type="password">
     </VTextField>
     <VBtn @click="login">
-      次へ
+      ログイン
     </VBtn>
   </VForm>
 </template>

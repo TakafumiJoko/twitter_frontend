@@ -8,6 +8,7 @@ export default {
   name: "HomeView",
   data(){
     return {
+      tweets: [],
     }
   },
   methods: {
